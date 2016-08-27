@@ -1,0 +1,382 @@
+<%@page language="java" %>
+<%@page import="coxfer_utilities.DbAccess" %>
+<%@ include file="/includes/taglibs.jsp" %>
+
+<% 
+  String title="CO Transfers | Human Resources | Administrative Services"; 
+  String header_class="admin";
+  String layout="two_column";
+%>
+
+<%@ include file="/includes/header.html" %>
+<f:view>
+<!-- This is if you want to have a stylized breadcrumb with a grey background, it can be deleted if you don't want to use it -->
+<div id="breadcrumbs">
+<a href="http://alaska.gov">State of Alaska</a> > <a href="http://www.correct.state.ak.us">Department of Corrections</a> > <a href="/administrative-services">Administrative Services</a> > <a href="/administrative-services/human-resources">Human Resources</a> > CO Transfers
+</div>
+<!-- End of the breadcrumb styling -->
+
+<!-- custom content between these lines ====================================================================================-->
+
+<link rel="stylesheet" href="../jqwidgets/styles/jqx.base.css" type="text/css" />
+<link rel="stylesheet" href="../jqwidgets/styles/jqx.metro.css" type="text/css" />
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" 
+  crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="../jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxdata.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxnotification.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxbuttons.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxscrollbar.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxmenu.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxlistbox.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxdropdownlist.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxgrid.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxgrid.selection.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxgrid.edit.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxgrid.columnsresize.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxgrid.filter.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxgrid.sort.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxgrid.pager.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxgrid.grouping.js"></script> 
+<script type="text/javascript" src="../jqwidgets/jqxpanel.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxcalendar.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxdatetimeinput.js"></script>
+<script type="text/javascript" src="../jqwidgets/globalization/globalize.js"></script>
+<script type="text/javascript" src="../jqwidgets/jqxwindow.js"></script>
+
+<script type="text/javascript" src="scripts/dateformat.js"></script>
+
+<style type="text/css">
+  input[type="button"] {margin: 10px;}
+  #opwin_cancel { float: left; clear: left }
+  #opwin_save {float: right; clear: right }
+  #opwin_add, #opwin_del {float: right }
+  #opwin_body { padding-top: 15px; padding-left: 15px }
+  .notification { display: none }
+</style>
+
+<script type="text/javascript">
+  /*======= PAGE GLOBALS===============================*/
+  var savedRows = new Array();
+  var saved_counter = 0;
+  var saved_returnstrings = new Array();
+  var check_resultstrings_id;
+  
+  /*======= UTILITY ===================================*/    
+
+  function dump(arr,level) {
+    var dumped_text = "";
+    if(!level) level = 0;
+    
+    //The padding given at the beginning of the line.
+    var level_padding = "";
+    for(var j=0;j<level+1;j++) level_padding += "    ";
+    
+    if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+      for(var item in arr) {
+        var value = arr[item];
+        
+        if(typeof(value) == 'object') { //If it is an array,
+          dumped_text += level_padding + "'" + item + "' ...\n";
+          dumped_text += dump(value,level+1);
+        } else {
+          dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+        }
+      }
+    } else { //Stings/Chars/Numbers etc.
+      dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+    }
+    return dumped_text;
+  }
+  
+  function value_in_array(val, arr) {
+    var result = false;
+    for (var i=0; i<arr.length; i++) {
+      if (arr[i]==val) result = true; 
+    }
+    return result;
+  }
+  
+  function check_saved_results() {
+    if (saved_returnstrings.length > 0) {
+      if (saved_counter == savedRows.length)  {
+        if (saved_returnstrings.indexOf('failure') == -1) {
+          $(".notification.success").jqxNotification('open');
+          clearInterval(check_resultstrings_id);
+        } else {
+          $(".notification.failure").jqxNotification('open');
+          clearInterval(check_resultstrings_id);            
+        }
+      }
+    }
+  }
+  
+  /*======= DOCUMENT READY ============================*/
+  $(document).ready( function(){
+
+    /**** SUBMISSIONS GRID ****/
+    var gridfields = [{
+      name: 'submissionid' },{
+      name: 'submissiondate', type: 'date' },{
+      name: 'lastname' },{
+      name: 'firstname' },{
+      name: 'middleinitial' },{
+      name: 'homephone' },{
+      name: 'workphone' },{
+      name: 'email' },{
+      name: 'currentinstitution' },{
+      name: 'transferinstitution' },{
+      name: 'currentpcn' },{
+      name: 'transferpcn' },{
+      name: 'originalhiredate' },{
+      name: 'transferclosedate' },{
+      name: 'comments' 
+    }];     
+    var grid_source = {
+      datatype: 'json',
+      datafields: gridfields,
+      id: 'submissionid',
+      url: 'cotransfers-list-recent.jsp'        
+    };
+    var grid_adapter = new $.jqx.dataAdapter(grid_source, {
+      loadComplete: function(data) {
+        //alert("Data loaded");
+      }
+    });
+    var grid_source_all = {
+      datatype: 'json',
+      datafields: gridfields,
+      id: 'submissionid',
+      url: 'cotransfers-list-all.jsp'
+    };
+    var grid_adapter_all = new $.jqx.dataAdapter(grid_source_all, {
+      loadComplete: function(data) {
+        //alert("Data loaded");
+      }
+    });
+    $("#cotransfers_grid").jqxGrid({
+      width: 958, height: 590,
+      source: grid_adapter,
+      columns: [
+        {text: "ID", datafield: 'submissionid', width: 40},
+        {text: "Date", datafield: 'submissiondate', width: 75, cellsformat: 'd' },
+        {text: "First Name", datafield: 'firstname', width: 88},
+        {text: "Last Name", datafield: 'lastname', width: 120},
+        {text: "Phone", datafield: 'homephone', width: 80},
+        {text: "Current PCN", datafield: 'currentpcn', width: 75},
+        {text: "Transfer PCN", datafield: 'transferpcn', width: 75},
+        {text: "Institution", datafield: 'currentinstitution', width: 150},
+        {text: "Hire Date", datafield: 'originalhiredate', width: 75},
+        {text: "Transfer to", datafield: 'transferinstitution', width: 180}
+      ],
+      theme: 'metro',
+      sortable: true,
+      pageable: true,
+      autoheight: true,
+      pagesize: 20
+    });
+    
+    /**** HEADER WITH BUTTONS ABOVE GRID ****/
+    $("#cotransfer_grid_headbar").jqxPanel({ width: 958, height: 50, theme: 'metro' });
+
+    /**** RECENT SUBMISSIONS FILTER BUTTON ****/
+    $("#btn_recent").jqxButton({ width: 150, height: 30, theme: 'metro' });
+    $("#btn_recent").on('click', function() {
+      $("#cotransfers_grid").jqxGrid({source: grid_adapter});
+    });
+    
+    /**** ALL SUBMISSIONS FILTER BUTTON ****/ 
+    $("#btn_all").jqxButton({ width: 150, height: 30, theme: 'metro' });
+    $("#btn_all").on('click', function() {
+      $("#cotransfers_grid").jqxGrid({source: grid_adapter_all});
+    });
+    
+    /**** TEST BUTTON 
+    $("#temptest").jqxButton({ width: 75, height: 30, theme: 'metro' });
+    $("#temptest").on('click', function() { 
+      alert(dump(saved_returnstrings));
+    });
+    ****/
+    
+    /**** OPPORTUNITIES GRID ****/
+    var oppts_gridfields = [
+      { name: "opportunityid", type: 'int' },
+      { name: "asofdate", type: 'date' },
+      { name: "location" },
+      { name: "pcn" },
+      { name: "closedate", type: 'date' }
+    ];
+    var opportunities_grid_source = {
+      datatype: 'json',
+      datafields: oppts_gridfields,
+      id: 'opportunityid',
+      url: 'cotransfers-opportunities.jsp'
+    };
+    var opportunities_grid_adapter = new $.jqx.dataAdapter(opportunities_grid_source);      
+    $("#cotransfers_opportunities_grid").jqxGrid({
+      source: opportunities_grid_adapter,
+      width: 500, height: 346,        
+      columns: [
+        {text: "Open Date", datafield: 'asofdate', width: 100, cellsformat: 'd', columntype: 'datetimeinput'},
+        {text: "Location", datafield: 'location', width: 225},
+        {text: "PCN", datafield: 'pcn', width: 75},
+        {text: "Close Date", datafield: 'closedate', width: 100, cellsformat: 'd', columntype: 'datetimeinput'}
+      ],
+      theme: 'metro',
+      pageable: true,
+      pagesize: 10,
+      editable: true,
+      sortable: true
+    });
+    $("#cotransfers_opportunities_grid").on('cellvaluechanged', function(event){
+      var args = event.args;
+      var oldval = (null != args.oldvalue)? args.oldvalue.valueOf(): null;
+      var newval = (null != args.newvalue)? args.newvalue.valueOf(): null;
+      if (oldval != newval) {
+        if (!value_in_array(args.rowindex, savedRows)) savedRows.push(args.rowindex);
+      }
+    });
+    $("#cotransfers_opportunities_grid").on('rowselect', function(event){
+      var args = event.args;
+      if (typeof args.row !== 'undefined') {
+        $("#selected_row_oppid").val(args.row.opportunityid);
+        $("#selected_row_ndx").val(args.rowindex);
+        $("#opwin_del").jqxButton({disabled: false});
+      } else {
+        $("#opwin_del").jqxButton({disabled: true});
+      }
+    });
+    
+    /**** BUTTON BAR BELOW OPPORTUNITIES GRID ****/
+    $("#opwin_buttonbar").jqxPanel({width: 500, height: 50, theme: 'metro'});
+    
+    /**** SAVE OPPORTUNITIES BUTTON ****/
+    $("#opwin_save").jqxButton({width: 75, height: 30, theme: 'metro'});
+    $("#opwin_save").on('click', function() {
+      var row, rowvalues;
+      var totalChangedRows = savedRows.length;
+      if (totalChangedRows > 0) {
+        for (var i=0; i<totalChangedRows; i++) {          
+          row = $("#cotransfers_opportunities_grid").jqxGrid('getrowdata', savedRows[i]);
+          rowvalues = {};
+          rowvalues["opportunityid"] = row.opportunityid;
+          rowvalues["asofdate"] = (null != row.asofdate)? dateFormat(row.asofdate, 'mm/dd/yyyy'): null;
+          rowvalues["location"] = row.location;
+          rowvalues["pcn"] = row.pcn;
+          rowvalues["closedate"] = (null != row.closedate)? dateFormat(row.closedate, 'mm/dd/yyyy'): null;
+          $.get("save_update_opportunity.jsp", rowvalues, function(data) {
+            saved_returnstrings.push(data.trim());
+            saved_counter++;
+            if (saved_counter == totalChangedRows) {
+              $("#cotransfers_opportunities_grid").jqxGrid({ source: null });
+              $("#cotransfers_opportunities_grid").jqxGrid({ source: opportunities_grid_adapter });           
+            }
+          });
+        }
+        /* This checks every quarter second on the combined results of all save operations, see check_saved_results for handler. */
+        check_resultstrings_id = setInterval(check_saved_results, 250);
+      }
+      $("#opportunities_window").jqxWindow('close');
+    });
+    
+    /**** CANCEL OPPORTUNITIES CHANGES BUTTON ****/
+    $("#opwin_cancel").jqxButton({width: 75, height: 30, theme: 'metro'});
+    $("#opwin_cancel").on('click', function() {
+      $("#opportunities_window").jqxWindow('close');
+      savedRows.length = 0; 
+      saved_returnstrings.length = 0;
+      saved_counter = 0;
+    });
+    
+    /**** ADD OPPORTUNITY BUTTON ***/
+    $("#opwin_add").jqxButton({width: 75, height: 30, theme: 'metro'});
+    $("#opwin_add").on('click', function() {
+      $("#cotransfers_opportunities_grid").jqxGrid('addrow',null,
+          {opportunityid: null, asofdate: null, location: "Enter location", pcn: "pcn", closedate: null},
+          'last');
+    });
+    
+    /**** DELETE OPPORTUNITY BUTTON ****/
+    $("#opwin_del").jqxButton({width: 75, height: 30, theme: 'metro', disabled: true});
+    $("#opwin_del").on('click', function() {
+      var opp_id = $("#selected_row_oppid").val();
+      var ndx = $("#selected_row_ndx").val();
+      var row_id = $("#cotransfers_opportunities_grid").jqxGrid('getrowid', ndx);
+      //alert(opp_id + " - " + ndx + " - " + $("#cotransfers_opportunities_grid").jqxGrid('getrowid', ndx));        
+      $.get("delete_opportunity.jsp", {opportunityid: row_id}, function(data){
+        if (data.trim() == "success") {
+          $("#cotransfers_opportunities_grid").jqxGrid('deleterow', row_id);            
+        } else { 
+          alert ("Could not delete opportunity ID #" + opp_id); 
+        }
+      });       
+    });
+    
+    /**** OPPORTUNITIES WINDOW ****/
+    $("#opportunities_window").jqxWindow({ width: 535, height: 455, theme: 'metro', autoOpen: false, isModal: true });
+    
+    /**** OPEN OPPORTUNITIES WINDOW BUTTON ****/
+    $("#btn_opps").jqxButton({ width: 150, height: 30, theme: 'metro' });
+    $("#btn_opps").on('click', function() {
+      $("#cotransfers_opportunities_grid").jqxGrid({ source: null });
+      $("#cotransfers_opportunities_grid").jqxGrid({ source: opportunities_grid_adapter });
+      saved_returnstrings.length = 0;
+      saved_counter = 0;
+      savedRows.length = 0;
+      $("#opportunities_window").jqxWindow('open');    
+    });
+    
+    /**** NOTIFICATIONS ****/
+    $(".notification.success").jqxNotification({ 
+      width: 'auto', position: 'top-right', opacity: .8, autoOpen: false, autoClose: true, template: 'success'        
+    });
+    $(".notification.failure").jqxNotification({
+      width: 'auto', position: 'top-right', opacity: .8, autoOpen: false, autoClose: true, template: 'error'
+    });
+  });
+      
+</script>
+
+<!-- Submissions Grid  -->
+<div id="cotransfer_grid_headbar">
+  <input type="button" id="btn_recent" value="Show Recent"/>
+  <input type="button" id="btn_all" value="Show All"/>
+  <input type="button" id="btn_opps" value="Opportunities" />
+  <!-- <input type="button" id="temptest" value="Test" />  -->
+</div>
+<div id="cotransfers_grid"></div>
+
+<!-- Opportunities dialog -->
+<div id="opportunities_window">
+  <div id="opwin_header"><span> CO Transfer Opportunities </span></div>
+  <div id="opwin_body">
+    <div id="opwin_innerContainer">
+      <div id="cotransfers_opportunities_grid"></div>
+    </div>
+    <div id="opwin_buttonbar">
+      <input type="button" id="opwin_cancel" value="Cancel" />          
+      <input type="button" id="opwin_save" value="Save" />          
+      <input type="button" id="opwin_add" value="Add" />
+      <input type="button" id="opwin_del" value="Delete" />         
+    </div>
+  </div>
+</div>  
+
+<!-- hidden inputs -->
+<input type="hidden" id="selected_row_oppid" value="" />
+<input type="hidden" id="selected_row_ndx" value="" />  
+
+<!-- Notifications -->
+<div class="notification success">All records saved successfully!</div>
+<div class="notification failure">Save unsuccessful - please contact IT helpdesk.</div>
+
+<!-- custom content between these lines ====================================================================================-->
+
+</div>
+</div>
+</f:view>
+<div class="clear"></div>
+
+
+<%@ include file="/includes/footer.html" %>
