@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <title>EditGrid</title>
   <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.base.css" type="text/css">
-  <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.mobile.css" type="text/css">
+  <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.metro.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="lib/jqwidgets/jqxcore.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxdata.js" type="text/javascript"></script>
@@ -20,11 +20,15 @@
   <script src="lib/jqwidgets/jqxgrid.selection.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxgrid.edit.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxgrid.sort.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxwindow.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxpanel.js" type="text/javascript"></script>
 
 <!----------------------------------------Styles----------------------------------------------------------------------->
 
   <style type="text/css">
-    #editGrid { margin: 25px }
+    #editGrid { margin: -1px 25px 25px 25px }
+    #buttonBar { margin: 25px 25px 0 25px }
+    input[type="button"] { margin: 12px }
   </style>
 
 <!----------------------------------------Code-behind------------------------------------------------------------------>
@@ -33,6 +37,7 @@
 
     $(document).ready(function() {
 
+      /***** Edit grid data and widget *****/
       var editGrid_source = {
         url: "grid_data.php",
         dataFields: [
@@ -48,7 +53,7 @@
       var _editGrid = $("#editGrid");
 
       _editGrid.jqxGrid({
-        width: 500, height: 600, theme: 'mobile',
+        width: 500, height: 600, theme: 'metro',
         source: editGrid_adapter,
         columns: [
           { text: "ID", dataField: "phrase_id", width: 50, editable: false },
@@ -57,6 +62,18 @@
         sortable: true,
         editable: true
       });
+
+      /***** Button bar and contents *****/
+      var _buttonBar = $("#buttonBar");
+      var _addButton = $("#addButton");
+      var _delButton = $("#deleteButton");
+
+      _buttonBar.jqxPanel({ width: 500, height: 50, theme: 'metro' });
+      _addButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
+      _delButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
+
+      /***** Add Phase dialog *****/
+
 
     });
 
@@ -73,6 +90,13 @@
     <input type="button" id="deleteButton" value="Delete Selected">
   </div>
   <div id="editGrid"></div>
+  <div id="addPhraseDlg">
+    <div id="addPhraseDlgTitle"> Add Phrase </div>
+    <div id="addPhraseDlgBody">
+      <textarea title="Phrase" id="addPhraseDlg_phraseText"></textarea>
+      <input type="button" id="addPhraseDlg_addButton" value="Add">
+    </div>
+  </div>
 
 </body>
 </html>
