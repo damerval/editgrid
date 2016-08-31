@@ -51,14 +51,17 @@
         ],
         dataType: 'json',
         id: 'phrase_id',
-        addrow: function(rowid, rowdata, position, commit) {
-
-          var paramsObj = {rowid: rowid, rowdata: rowdata, position: position};
+        addrow: function(rowdata, commit) {
+          var phraseText = rowdata.phrase;
           $.ajax("savePhrase.php", {
-            async: false, cache: false,
-            data: paramsObj,
+            async: false, cache: false, data: {phrase_text: phraseText},
             success: function(data) {
-              commit(data === "true");
+              if (data === "true") {
+                commit(true);
+              } else {
+                alert("the server returned " + data);
+                commit(false);
+              }
             },
             error: function(jqXHR) {
               alert(jqXHR.responseText);
