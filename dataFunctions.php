@@ -36,12 +36,17 @@ function get_result_set($sql) {
   return json_encode($rows);
 }
 
-function get_result_bool($sql) {
+function get_result_cud($sql, $operation) {
 
   $conn = db_connect();
   if ($conn) {
     if (mysqli_query($conn, $sql)) {
-      $result = "true";
+      switch ($operation) {
+        case "insert": $result = mysqli_insert_id($conn); break;
+        case "update": $result = mysqli_affected_rows($conn); break;
+        case "delete": $result = mysqli_affected_rows($conn); break;
+        default: $result = "Bad operation identifier.";
+      }
     } else $result = mysqli_error($conn);
   } else $result = "Unable to connect to database.";
 
