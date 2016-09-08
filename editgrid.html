@@ -23,6 +23,9 @@
   <script src="lib/jqwidgets/jqxwindow.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxpanel.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxtextarea.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxcalendar.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxdatetimeinput.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/globalization/globalize.js" type="text/javascript"></script>
 
 <!----------------------------------------Styles----------------------------------------------------------------------->
 
@@ -33,12 +36,29 @@
     #addPhraseDlg_addButton { margin-left: 45px }
     #addPhraseDlg { display: none }
     #addPhraseDlgBody { padding-top: 15px; padding-left: 15px }
-
   </style>
 
 <!----------------------------------------Code-behind------------------------------------------------------------------>
 
   <script type="text/javascript" language="javascript">
+
+    function formatDate(d) {
+
+      var dd = ('0' + d.getDate()).slice(-2);
+      var mm = ('0' + (d.getMonth()+1)).slice(-2);
+      var yy = d.getFullYear().toString();
+
+      return yy+mm+dd;
+
+    }
+
+    function dump(obj) {
+      var out = '';
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) out += i + ": " + obj[i] + "\n";
+      }
+      return out;
+    }
 
     $(document).ready(function() {
 
@@ -47,7 +67,8 @@
         url: "grid_data.php",
         dataFields: [
           { name: "phrase_id", type: 'int' },
-          { name: "phrase", type: 'string' }
+          { name: "phrase", type: 'string' },
+          { name: "date_field", type: 'date', format: "yyyy-MM-dd" }
         ],
         dataType: 'json',
         id: 'phrase_id',
@@ -89,14 +110,15 @@
           });
         },
         updaterow: function(rowid, newdata, commit) {
-          //alert(rowid + " updated");
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {phrase_text: newdata.phrase, operation: 'update', row_id: rowid},
+            async: false, cache: false, data: {
+              phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update', row_id: rowid
+            },
             success: function(data) {
-              if ($.isNumeric(data) && parseInt(data) > 0) {
+              if ($.isNumeric(data) && parseInt(data) >= 0) {
                 commit(true);
               } else {
-                alert("The update didn't go through - please hit Ctrl-R to reload the page.");
+                alert("Data was " + dump(data) + ". The update didn't go through - please hit Ctrl-R to reload the page.");
                 commit(false);
               }
             },
@@ -115,11 +137,12 @@
         width: 500, height: 600, theme: 'metro',
         source: editGrid_adapter,
         columns: [
-          { text: "ID", dataField: "phrase_id", width: 50, editable: false },
-          { text: "Phrase", dataField: "phrase", width: 450 }
+          { text: "Phrase", dataField: "phrase", width: 400 },
+          { text: "Date", dataField: "date_field", width: 100, columntype: 'datetimeinput', cellsformat: "MM/dd/yyyy" }
         ],
         sortable: true,
-        editable: true
+        editable: true,
+        editmode: 'dblclick'
       });
       _editGrid.on('rowselect', function() {
         _delButton.jqxButton({ disabled: false });
@@ -129,10 +152,12 @@
       var _buttonBar = $("#buttonBar");
       var _addButton = $("#addButton");
       var _delButton = $("#deleteButton");
+      var _refreshButton = $("#refreshButton");
 
       _buttonBar.jqxPanel({ width: 500, height: 50, theme: 'metro' });
       _addButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
       _delButton.jqxButton({ width: 105, height: 25, theme: 'metro', disabled: true });
+      _refreshButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
       _addButton.on('click', function() {
         _addPhraseDlg.jqxWindow('open');
       });
@@ -142,6 +167,10 @@
         _editGrid.jqxGrid('deleterow', rowId);
         _delButton.jqxButton({ disabled: true });
       });
+      _refreshButton.on('click', function() {
+        _editGrid.jqxGrid('updatebounddata');
+      });
+
       /***** ADD PHRASE DIALOG *****/
       var _addPhraseDlg = $("#addPhraseDlg");
       var _apdTextBox = $("#addPhraseDlg_phraseText");
@@ -169,6 +198,7 @@
   <div id="buttonBar">
     <input type="button" id="addButton" value="Add Phrase">
     <input type="button" id="deleteButton" value="Delete Selected">
+    <input type="button" id="refreshButton" value="Refresh Data">
   </div>
   <div id="editGrid"></div>
   <div id="addPhraseDlg">

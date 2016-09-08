@@ -9,13 +9,16 @@ require_once("dataFunctions.php");
 
 if (isset($_GET['phrase_text']) && isset($_GET['operation'])) {
   $phraseText = $_GET['phrase_text'];
+  $dateField = isset($_GET['date_field']) ? $_GET['date_field'] : null;
   $operation = $_GET['operation'];
   if ($operation == "insert") {
-    echo get_result_cud("INSERT INTO phrases (phrase) VALUES ('" . addslashes(urldecode($phraseText)) . "')", $operation);
+    echo get_result_cud("INSERT INTO phrases (phrase, datefield) VALUES ('" . addslashes(urldecode($phraseText)) . "', CURDATE())", $operation);
   } elseif (isset($_GET['row_id'])) {
     $rowId = $_GET['row_id'];
     if ($operation == "update") {
-      echo get_result_cud("UPDATE phrases SET phrase = '" . addslashes(urldecode($phraseText)) . "' WHERE phrase_id = " . $rowId, $operation);
+      echo get_result_cud("UPDATE phrases SET phrase = '"
+          . addslashes(urldecode($phraseText)) . "', datefield = '"
+          . $dateField . "' WHERE phrase_id = " . $rowId, $operation);
     } elseif ($operation == "delete") {
       echo get_result_cud("DELETE FROM phrases WHERE phrase_id = " . $rowId, $operation);
     } else {
