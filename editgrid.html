@@ -110,7 +110,7 @@
           });
         },
         updaterow: function(rowid, newdata, commit) {
-          $.ajax("savePhrase.php?XDEBUG_SESSION_START=xdbg", {
+          $.ajax("savePhrase.php", {
             async: false, cache: false, data: {
               phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update', row_id: rowid
             },
