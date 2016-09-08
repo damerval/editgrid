@@ -36,7 +36,6 @@
     #addPhraseDlg_addButton { margin-left: 45px }
     #addPhraseDlg { display: none }
     #addPhraseDlgBody { padding-top: 15px; padding-left: 15px }
-
   </style>
 
 <!----------------------------------------Code-behind------------------------------------------------------------------>
@@ -45,12 +44,9 @@
 
     function formatDate(d) {
 
-      var dd = d.getDate();
-      var mm = d.getMonth()+1;
-      var yy = d.getFullYear();
-
-      if ( dd < 10 ) dd = '0' + dd;
-      if ( mm < 10 ) mm = '0' + mm;
+      var dd = ('0' + d.getDate()).slice(-2);
+      var mm = ('0' + (d.getMonth()+1)).slice(-2);
+      var yy = d.getFullYear().toString();
 
       return yy+mm+dd;
 
@@ -114,13 +110,12 @@
           });
         },
         updaterow: function(rowid, newdata, commit) {
-          alert(dump(newdata) + dump(_editGrid.jqxGrid('getrowdata', _editGrid.jqxGrid('getselectedrowindex'))));
-          $.ajax("savePhrase.php?XDEBUG_SESSION_START=19634", {
+          $.ajax("savePhrase.php?XDEBUG_SESSION_START=xdbg", {
             async: false, cache: false, data: {
               phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update', row_id: rowid
             },
             success: function(data) {
-              if ($.isNumeric(data) && parseInt(data) > 0) {
+              if ($.isNumeric(data) && parseInt(data) >= 0) {
                 commit(true);
               } else {
                 alert("Data was " + dump(data) + ". The update didn't go through - please hit Ctrl-R to reload the page.");
@@ -157,10 +152,12 @@
       var _buttonBar = $("#buttonBar");
       var _addButton = $("#addButton");
       var _delButton = $("#deleteButton");
+      var _refreshButton = $("#refreshButton");
 
       _buttonBar.jqxPanel({ width: 500, height: 50, theme: 'metro' });
       _addButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
       _delButton.jqxButton({ width: 105, height: 25, theme: 'metro', disabled: true });
+      _refreshButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
       _addButton.on('click', function() {
         _addPhraseDlg.jqxWindow('open');
       });
@@ -169,6 +166,9 @@
         var rowId = _editGrid.jqxGrid('getrowid', selRowIndex);
         _editGrid.jqxGrid('deleterow', rowId);
         _delButton.jqxButton({ disabled: true });
+      });
+      _refreshButton.on('click', function() {
+        _editGrid.jqxGrid('updatebounddata');
       });
 
       /***** ADD PHRASE DIALOG *****/
@@ -198,6 +198,7 @@
   <div id="buttonBar">
     <input type="button" id="addButton" value="Add Phrase">
     <input type="button" id="deleteButton" value="Delete Selected">
+    <input type="button" id="refreshButton" value="Refresh Data">
   </div>
   <div id="editGrid"></div>
   <div id="addPhraseDlg">

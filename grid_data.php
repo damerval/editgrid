@@ -7,4 +7,4 @@
  */
 require_once("dataFunctions.php");
 
-echo get_result_set("select * from phrases");
+echo get_result_set("select phrase_id, phrase, datefield as date_field from phrases");

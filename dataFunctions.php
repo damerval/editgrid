@@ -37,18 +37,18 @@ function get_result_set($sql) {
 }
 
 function get_result_cud($sql, $operation) {
+  $result = false;
 
-  $conn = db_connect();
-  if ($conn) {
-    if (mysqli_query($conn, $sql)) {
-      switch ($operation) {
-        case "insert": $result = mysqli_insert_id($conn); break;
-        case "update": $result = mysqli_affected_rows($conn); break;
-        case "delete": $result = mysqli_affected_rows($conn); break;
-        default: $result = "Bad operation identifier.";
-      }
-    } else $result = mysqli_error($conn);
-  } else $result = "Unable to connect to database.";
+  $config = get_config_data();
+  $conn = new mysqli($config['host'], $config['username'], $config['password'], $config['dbname']);
+
+  if (!mysqli_connect_errno()) {
+    switch($operation) {
+      case "delete": if ($conn->query($sql)) $result = $conn->affected_rows; break;
+      case "insert": if ($conn->query($sql)) $result = $conn->insert_id; break;
+      case "update": if ($conn->query($sql)) $result = $conn->affected_rows; break;
+    }
+  } else $result = "Unable to connect to the database.";
 
   return $result;
 }
