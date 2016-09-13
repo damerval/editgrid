@@ -76,7 +76,7 @@
           { name: "phrase_id", type: 'int' },
           { name: "phrase", type: 'string' },
           { name: "date_field", type: 'date', format: "yyyy-MM-dd" },
-          { name: "numberField", type: 'string' }
+          { name: "numberField", type: 'number', format: "0#.##" }
         ],
         dataType: 'json',
         id: 'phrase_id',
@@ -124,7 +124,7 @@
           });
         },
         updaterow: function(rowid, newdata, commit) {
-          $.ajax("savePhrase.php" /*+ "?XDEBUG_SESSION_START=xdbg"*/, {
+          $.ajax("savePhrase.php" /*+ "?XDEBUG_SESSION_START=xDbg"*/, {
             cache: false, data: {
               phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update',
               row_id: rowid, numberField: newdata.numberField
