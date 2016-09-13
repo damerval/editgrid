@@ -36,6 +36,7 @@
     #addPhraseDlg_addButton { margin-left: 45px }
     #addPhraseDlg { display: none }
     #addPhraseDlgBody { padding-top: 15px; padding-left: 15px }
+    #advisory { position: absolute; top: 0; right: 0; display: none }
   </style>
 
 <!----------------------------------------Code-behind------------------------------------------------------------------>
@@ -62,7 +63,7 @@
 
     $(document).ready(function() {
 
-      /***** EDIT GRID DATA AND WIDGET *****/
+      /***** EDIT GRID DATA *****/
       var editGrid_source = {
         url: "grid_data.php",
         dataFields: [
@@ -75,7 +76,7 @@
         addrow: function(rowid, rowdata, position, commit) {
           var phraseText = rowdata.phrase;
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {phrase_text: phraseText, operation: 'insert'},
+            cache: false, data: {phrase_text: phraseText, operation: 'insert'},
             success: function(data) {
               if ($.isNumeric(data) && parseInt(data) > 0) {
                 commit(true, parseInt(data));
@@ -94,7 +95,7 @@
         deleterow: function(rowid, commit) {
           //alert(rowid);
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {phrase_text: "", operation: 'delete', row_id: rowid},
+            cache: false, data: {phrase_text: "", operation: 'delete', row_id: rowid},
             success: function(data) {
               if ($.isNumeric(data) && parseInt(data) > 0) {
                 commit(true);
@@ -111,7 +112,7 @@
         },
         updaterow: function(rowid, newdata, commit) {
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {
+            cache: false, data: {
               phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update', row_id: rowid
             },
             success: function(data) {
@@ -132,7 +133,9 @@
 
       var editGrid_adapter = new $.jqx.dataAdapter(editGrid_source);
 
+      /***** EDIT GRID WIDGET *****/
       var _editGrid = $("#editGrid");
+      var _advisory = $("#advisory");
       _editGrid.jqxGrid({
         width: 500, height: 600, theme: 'metro',
         source: editGrid_adapter,
@@ -146,6 +149,12 @@
       });
       _editGrid.on('rowselect', function() {
         _delButton.jqxButton({ disabled: false });
+      });
+      _editGrid.on('cellbeginedit', function() {
+        _advisory.fadeIn();
+      });
+      _editGrid.on('cellendedit', function() {
+        _advisory.fadeOut();
       });
 
       /***** BUTTON BAR AND CONTENTS *****/
@@ -191,7 +200,7 @@
 
 </head>
 
-<!--===============================================Body==============================================================-->
+<!--============================================== HTML Body ========================================================-->
 
 <body>
 
@@ -208,6 +217,8 @@
       <input type="button" id="addPhraseDlg_addButton" value="Add">
     </div>
   </div>
+  <div id="advisory">Cell being edited.</div>
+  <img src="images/error.png">
 
 </body>
 </html>

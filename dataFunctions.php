@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created in PhpStorm.
  * User: pdamerval
  * Date: 8/30/2016
  * Time: 8:35 AM
@@ -12,7 +12,7 @@ function get_config_data() {
 
 function db_connect() {
   $config = get_config_data();
-  $connection = mysqli_connect("localhost", $config['username'], $config['password'], $config['dbname']);
+  $connection = mysqli_connect($config['host'], $config['username'], $config['password'], $config['dbname']);
   if (!$connection) {
     return false;
   } else {
