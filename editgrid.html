@@ -55,7 +55,7 @@
       return yy+mm+dd;
 
     }
-
+/*
     function dump(obj) {
       var out = '';
       for (var i in obj) {
@@ -63,7 +63,7 @@
       }
       return out;
     }
-
+*/
     $(document).ready(function() {
 
       var _err = $("#err");
@@ -76,7 +76,7 @@
           { name: "phrase_id", type: 'int' },
           { name: "phrase", type: 'string' },
           { name: "date_field", type: 'date', format: "yyyy-MM-dd" },
-          { name: "numberField", type: 'number', format: "0#.##" }
+          { name: "numberField" }
         ],
         dataType: 'json',
         id: 'phrase_id',
@@ -124,7 +124,7 @@
           });
         },
         updaterow: function(rowid, newdata, commit) {
-          $.ajax("savePhrase.php" /*+ "?XDEBUG_SESSION_START=xDbg"*/, {
+          $.ajax("savePhrase.php", {
             cache: false, data: {
               phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update',
               row_id: rowid, numberField: newdata.numberField
@@ -134,7 +134,7 @@
                 commit(true);
                 _ok.fadeIn();
               } else {
-                alert("Data was " + dump(data) + ". The update didn't go through - please hit Ctrl-R to reload the page.");
+                alert("Data was " + data + ". The update didn't go through - please hit Ctrl-R to reload the page.");
                 commit(false);
                 _err.fadeIn();
               }

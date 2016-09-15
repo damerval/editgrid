@@ -44,9 +44,21 @@ function get_result_cud($sql, $operation) {
 
   if (!mysqli_connect_errno()) {
     switch($operation) {
-      case "delete": if ($conn->query($sql)) $result = $conn->affected_rows; break;
-      case "insert": if ($conn->query($sql)) $result = $conn->insert_id; break;
-      case "update": if ($conn->query($sql)) $result = $conn->affected_rows; break;
+      case "delete": if ($conn->query($sql)) {
+        $result = $conn->affected_rows;
+      } else {
+        $result = $conn->error;
+      } break;
+      case "insert": if ($conn->query($sql)) {
+        $result = $conn->insert_id;
+      } else {
+        $result = $conn->error;
+      } break;
+      case "update": if ($conn->query($sql)) {
+        $result = $conn->affected_rows;
+      } else {
+        $result = $conn->error;
+      } break;
     }
   } else $result = "Unable to connect to the database.";
 
