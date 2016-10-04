@@ -7,7 +7,7 @@
  */
 
 function get_config_data() {
-  return parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/dataFunctions.ini");
+  return parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/ini/dataFunctions.ini");
 }
 
 function db_connect() {

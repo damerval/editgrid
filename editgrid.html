@@ -88,6 +88,7 @@
               if ($.isNumeric(data) && parseInt(data) > 0) {
                 commit(true, parseInt(data));
                 _apdTextBox.val("");
+                _editGrid.jqxGrid('updatebounddata');
                 _ok.fadeIn();
               } else {
                 alert("the server returned " + data);
