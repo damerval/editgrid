@@ -6,6 +6,10 @@ var setupTabs = function(tabObj) {
   tabObj.jqxTabs({ width: 800, height: 600, theme: 'metro' });
 };
 
+var setupOffenderButtonBar = function(barObj) {
+  barObj.jqxPanel({ width: 775, height: 35, theme: 'metro' });
+};
+
 var setupOffenderGrid = function(gridObj) {
 
   var gridSource = {
@@ -22,13 +26,13 @@ var setupOffenderGrid = function(gridObj) {
     ],
     dataType: 'json',
     id: 'offenderId',
-    pageSize: 17
+    pageSize: 16
   };
 
   var sourceAdapter = new $.jqx.dataAdapter(gridSource);
 
   gridObj.jqxGrid({
-    width: 750, height: 550, theme: 'metro',
+    width: 775, height: 515, theme: 'metro',
     source: sourceAdapter,
     altrows: true,
     columns: [
@@ -44,5 +48,11 @@ var setupOffenderGrid = function(gridObj) {
     pageable: true,
     pagerMode: 'simple'
   });
-
 };
+
+var setupButtons = function(buttonsArray) {
+  $.each(buttonsArray, function(ndx, obj) {
+    obj.jqxButton({ width: 100, height: 25, theme: 'metro' });
+  });
+};
+

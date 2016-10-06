@@ -1,12 +1,14 @@
 /**
  * Created by pdamerval on 10/3/2016.
  */
-var RACE = {
-  K: "NATIVE AK/CUP'IK",	L: "NATIVE AMERICAN",	A: "ASIAN/PACIFIC ISLAND",
-  B: "BLACK",	W: "CAUCASIAN",	U: "UNKNOWN",	I: "INDIAN",
-  H: "HISPANIC/LATINO",	N: "NATIVE AK/UNK TRIBE",	C: "NATIVE AK/ATHABASKAN",
-  D: "NATIVE AK/TLINGIT",	E: "NATIVE AK/HAIDA",	F: "NATIVE AK/ALEUT",
-  G: "NATIVE AK/INUPIAT",	J: "NATIVE AK/YUP'IK",	O: "NATIVE AK/TSIMSHIAN",
-  P: "ASIAN",	Q: "NATIVE AMERICAN/ALAS",	R: "PACIFIC NATIVE",
-  S: "OTHER/UNKNOWN"
-};
+var RACE = [
+  { ID: "K", value: "NATIVE AK/CUP'IK" },{ ID: "L", value: "NATIVE AMERICAN" },
+  { ID: "A", value: "ASIAN/PACIFIC ISLAND" },{ ID: "B", value: "BLACK" },{ ID: "W", value: "CAUCASIAN" },
+  { ID: "U", value: "UNKNOWN" },{ ID: "I", value: "INDIAN" },{ ID: "H", value: "HISPANIC/LATINO" },
+  { ID: "N", value: "NATIVE AK/UNK TRIBE" },{ ID: "C", value: "NATIVE AK/ATHABASKAN" },
+  { ID: "D", value: "NATIVE AK/TLINGIT" },{ ID: "E", value: "NATIVE AK/HAIDA" },
+  { ID: "F", value: "NATIVE AK/ALEUT" },{ ID: "G", value: "NATIVE AK/INUPIAT" },
+  { ID: "J", value: "NATIVE AK/YUP'IK" },{ ID: "O", value: "NATIVE AK/TSIMSHIAN" },
+  { ID: "P", value: "ASIAN" },{ ID: "Q", value: "NATIVE AMERICAN/ALAS" },
+  { ID: "R", value: "NATIVE HAWAIIAN/PACI" },{ ID: "S", value: "OTHER/UNKNOWN" }
+];

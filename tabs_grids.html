@@ -36,11 +36,20 @@
   <script src="lib/jqwidgets/jqxtabs.js" type="text/javascript"></script>
 
   <script type="text/javascript" src="js/tabs_grids.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/tabs_grids.css">
 
   <script type="text/javascript" language="javascript">
     $(document).ready(function() {
+      var btnTest = $("#offenderTestButton");
+      var btnSecond = $("#offenderSecondButton");
+      var btnThird = $("#offenderThirdButton");
       setupTabs($("#tabs"));
+      setupOffenderButtonBar($("#offenderButtonBar"));
       setupOffenderGrid($("#offenderGrid"));
+      setupButtons([btnTest, btnSecond, btnThird]);
+      btnTest.on('click', function() {
+
+      });
     });
   </script>
 
@@ -55,11 +64,17 @@
     <li>Legal status history</li>
   </ul>
   <div id="offenderTab">
+    <div id="offenderButtonBar">
+      <input type="button" id="offenderTestButton" value="Test"/>
+      <input type="button" id="offenderSecondButton" value="Second Button"/>
+      <input type="button" id="offenderThirdButton" value="Third Button"/>
+    </div>
     <div id="offenderGrid"></div>
   </div>
   <div id="locationTab"></div>
   <div id="legalStatusTab"></div>
 </div>
+<div id="testdropdown"></div>
 
 </body>
 
