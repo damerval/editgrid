@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <!----------------------------------------Declarations, imports and links---------------------------------------------->
 
   <meta charset="UTF-8">
@@ -36,6 +37,9 @@
     #addPhraseDlg_addButton { margin-left: 45px }
     #addPhraseDlg { display: none }
     #addPhraseDlgBody { padding-top: 15px; padding-left: 15px }
+    #advisory { position: absolute; top: 0; right: 0; display: none; font-size: smaller }
+    #err { position: absolute; top: 0; right: 0; display: none }
+    #ok { position: absolute; top: 0; right: 0; display: none }
   </style>
 
 <!----------------------------------------Code-behind------------------------------------------------------------------>
@@ -51,7 +55,7 @@
       return yy+mm+dd;
 
     }
-
+/*
     function dump(obj) {
       var out = '';
       for (var i in obj) {
@@ -59,72 +63,87 @@
       }
       return out;
     }
-
+*/
     $(document).ready(function() {
 
-      /***** EDIT GRID DATA AND WIDGET *****/
+      var _err = $("#err");
+      var _ok = $("#ok");
+
+      /***** EDIT GRID DATA *****/
       var editGrid_source = {
         url: "grid_data.php",
         dataFields: [
           { name: "phrase_id", type: 'int' },
           { name: "phrase", type: 'string' },
-          { name: "date_field", type: 'date', format: "yyyy-MM-dd" }
+          { name: "date_field", type: 'date', format: "yyyy-MM-dd" },
+          { name: "numberField" }
         ],
         dataType: 'json',
         id: 'phrase_id',
         addrow: function(rowid, rowdata, position, commit) {
           var phraseText = rowdata.phrase;
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {phrase_text: phraseText, operation: 'insert'},
+            cache: false, data: {phrase_text: phraseText, operation: 'insert'},
             success: function(data) {
               if ($.isNumeric(data) && parseInt(data) > 0) {
                 commit(true, parseInt(data));
                 _apdTextBox.val("");
+                _editGrid.jqxGrid('updatebounddata');
+                _ok.fadeIn();
               } else {
                 alert("the server returned " + data);
                 commit(false);
+                _err.fadeIn();
               }
             },
             error: function(jqXHR) {
               alert(jqXHR.responseText);
               commit(false);
+              _err.fadeIn();
             }
           });
         },
         deleterow: function(rowid, commit) {
           //alert(rowid);
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {phrase_text: "", operation: 'delete', row_id: rowid},
+            cache: false, data: {phrase_text: "", operation: 'delete', row_id: rowid},
             success: function(data) {
               if ($.isNumeric(data) && parseInt(data) > 0) {
                 commit(true);
+                _ok.fadeIn();
               } else {
                 alert("The selected record was not found in the database. Please hit Ctrl-R to reload the page.");
                 commit(false);
+                _err.fadeIn();
               }
             },
             error: function(jqXHR) {
               alert(jqXHR.responseText);
               commit(false);
+              _err.fadeIn();
             }
           });
         },
         updaterow: function(rowid, newdata, commit) {
           $.ajax("savePhrase.php", {
-            async: false, cache: false, data: {
-              phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update', row_id: rowid
+            cache: false, data: {
+              phrase_text: newdata.phrase, date_field: formatDate(newdata.date_field), operation: 'update',
+              row_id: rowid, numberField: newdata.numberField
             },
             success: function(data) {
               if ($.isNumeric(data) && parseInt(data) >= 0) {
                 commit(true);
+                _ok.fadeIn();
               } else {
-                alert("Data was " + dump(data) + ". The update didn't go through - please hit Ctrl-R to reload the page.");
+                alert("Data was " + data + ". The update didn't go through - please hit Ctrl-R to reload the page.");
                 commit(false);
+                _err.fadeIn();
               }
             },
             error: function(jqXHR) {
               alert(jqXHR.responseText);
               commit(false);
+              _err.fadeIn();
             }
           });
         }
@@ -132,13 +151,16 @@
 
       var editGrid_adapter = new $.jqx.dataAdapter(editGrid_source);
 
+      /***** EDIT GRID WIDGET *****/
       var _editGrid = $("#editGrid");
+      var _advisory = $("#advisory");
       _editGrid.jqxGrid({
-        width: 500, height: 600, theme: 'metro',
+        width: 550, height: 600, theme: 'metro', altrows: true,
         source: editGrid_adapter,
         columns: [
           { text: "Phrase", dataField: "phrase", width: 400 },
-          { text: "Date", dataField: "date_field", width: 100, columntype: 'datetimeinput', cellsformat: "MM/dd/yyyy" }
+          { text: "Date", dataField: "date_field", width: 80, columntype: 'datetimeinput', cellsformat: "MM/dd/yyyy" },
+          { text: "Number", dataField: "numberField", width: 70 }
         ],
         sortable: true,
         editable: true,
@@ -146,6 +168,13 @@
       });
       _editGrid.on('rowselect', function() {
         _delButton.jqxButton({ disabled: false });
+        _err.fadeOut(); _ok.fadeOut();
+      });
+      _editGrid.on('cellbeginedit', function() {
+        _advisory.fadeIn(); _err.fadeOut(); _ok.fadeOut();
+      });
+      _editGrid.on('cellendedit', function() {
+        _advisory.fadeOut(); _err.fadeOut(); _ok.fadeOut();
       });
 
       /***** BUTTON BAR AND CONTENTS *****/
@@ -154,7 +183,7 @@
       var _delButton = $("#deleteButton");
       var _refreshButton = $("#refreshButton");
 
-      _buttonBar.jqxPanel({ width: 500, height: 50, theme: 'metro' });
+      _buttonBar.jqxPanel({ width: 550, height: 50, theme: 'metro' });
       _addButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
       _delButton.jqxButton({ width: 105, height: 25, theme: 'metro', disabled: true });
       _refreshButton.jqxButton({ width: 105, height: 25, theme: 'metro' });
@@ -191,7 +220,7 @@
 
 </head>
 
-<!--===============================================Body==============================================================-->
+<!--============================================== HTML Body ========================================================-->
 
 <body>
 
@@ -208,6 +237,9 @@
       <input type="button" id="addPhraseDlg_addButton" value="Add">
     </div>
   </div>
+  <div id="advisory">Cell being edited...</div>
+  <img id="err" src="images/error.png">
+  <img id="ok" src="images/success.png">
 
 </body>
 </html>

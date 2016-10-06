@@ -1,18 +1,18 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created in PhpStorm.
  * User: pdamerval
  * Date: 8/30/2016
  * Time: 8:35 AM
  */
 
 function get_config_data() {
-  return parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/dataFunctions.ini");
+  return parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/ini/dataFunctions.ini");
 }
 
 function db_connect() {
   $config = get_config_data();
-  $connection = mysqli_connect("localhost", $config['username'], $config['password'], $config['dbname']);
+  $connection = mysqli_connect($config['host'], $config['username'], $config['password'], $config['dbname']);
   if (!$connection) {
     return false;
   } else {
@@ -44,9 +44,21 @@ function get_result_cud($sql, $operation) {
 
   if (!mysqli_connect_errno()) {
     switch($operation) {
-      case "delete": if ($conn->query($sql)) $result = $conn->affected_rows; break;
-      case "insert": if ($conn->query($sql)) $result = $conn->insert_id; break;
-      case "update": if ($conn->query($sql)) $result = $conn->affected_rows; break;
+      case "delete": if ($conn->query($sql)) {
+        $result = $conn->affected_rows;
+      } else {
+        $result = $conn->error;
+      } break;
+      case "insert": if ($conn->query($sql)) {
+        $result = $conn->insert_id;
+      } else {
+        $result = $conn->error;
+      } break;
+      case "update": if ($conn->query($sql)) {
+        $result = $conn->affected_rows;
+      } else {
+        $result = $conn->error;
+      } break;
     }
   } else $result = "Unable to connect to the database.";
 
