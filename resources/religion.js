@@ -1,23 +1,23 @@
 /**
  * Created by pdamerval on 10/3/2016.
  */
-var RELIGION = [
-  { ID: "00", value: "NONE" },{ ID: "01", value: "ASSEMBLIES OF GOD" },{ ID: "02", value: "ISLAM" },
-  { ID: "03", value: "BAPTIST" },{ ID: "04", value: "CATHOLIC" },{ ID: "05", value: "BUDDHIST" },
-  { ID: "06", value: "EPISCOPAL" },{ ID: "07", value: "CHRISTIAN SCIENCE" },{ ID: "08", value: "PENTECOSTAL" },
-  { ID: "09", value: "JEHOVAH'S WITNESS" },{ ID: "10", value: "JEWISH" },{ ID: "11", value: "METHODIST" },
-  { ID: "12", value: "LUTHERAN" },{ ID: "13", value: "LDS/MORMON" },{ ID: "14", value: "NATIVE AMERICAN" },
-  { ID: "15", value: "NONDENOM CHRISTIAN" },{ ID: "16", value: "SHARED MINISTRIES" },
-  { ID: "17", value: "SEVENTH DAY ADVENTIST" },{ ID: "18", value: "WORLDWIDE CHURCH OF GOD" },
-  { ID: "19", value: "PRESBYTERIAN" },{ ID: "20", value: "CHURCH OF CHRIST" },{ ID: "99", value: "UNKNOWN" },
-  { ID: "21", value: "DISCIPLES OF CHRIST" },{ ID: "22", value: "EVANGELICAL CONVENANT" },
-  { ID: "23", value: "GREEK ORTHODOX" },{ ID: "24", value: "NAZARENE" },{ ID: "25", value: "FRIENDS (QUAKERS)" },
-  { ID: "26", value: "RUSSIAN ORTHODOX" },{ ID: "27", value: "UNITARIAN UNIVERSALIST" },{ ID: "28", value: "OTHER" },
-  { ID: "29", value: "BRETHREN" },{ ID: "30", value: "FREE METHODIST" },{ ID: "31", value: "ALLIANCE BIBLE" },
-  { ID: "32", value: "BIBLE CHURCH" },{ ID: "33", value: "CHRISTIAN METH EPISCOPAL" },
-  { ID: "34", value: "CHURCH OF GOD" },{ ID: "35", value: "CHURCH OF GOD IN PROPHECY" },
-  { ID: "36", value: "MENNONITE" },{ ID: "37", value: "MORAVIAN" },{ ID: "38", value: "SALVATION ARMY" },
-  { ID: "39", value: "WESLEYAN" },{ ID: "40", value: "BAHA'I" },{ ID: "41", value: "CHURCH OF RELIGIOUS SCI" },
-  { ID: "42", value: "ECKANKAR" },{ ID: "43", value: "REFORMED LDS" },{ ID: "44", value: "CHRISTIAN CHURCH" },
-  { ID: "45", value: "DRUID" },{ ID: "46", value: "WICCAN" }
+var RELIGIONS = [
+  { code: "00", religion: "NONE" },{ code: "01", religion: "ASSEMBLIES OF GOD" },{ code: "02", religion: "ISLAM" },
+  { code: "03", religion: "BAPTIST" },{ code: "04", religion: "CATHOLIC" },{ code: "05", religion: "BUDDHIST" },
+  { code: "06", religion: "EPISCOPAL" },{ code: "07", religion: "CHRISTIAN SCIENCE" },{ code: "08", religion: "PENTECOSTAL" },
+  { code: "09", religion: "JEHOVAH'S WITNESS" },{ code: "10", religion: "JEWISH" },{ code: "11", religion: "METHODIST" },
+  { code: "12", religion: "LUTHERAN" },{ code: "13", religion: "LDS/MORMON" },{ code: "14", religion: "NATIVE AMERICAN" },
+  { code: "15", religion: "NONDENOM CHRISTIAN" },{ code: "16", religion: "SHARED MINISTRIES" },
+  { code: "17", religion: "SEVENTH DAY ADVENTIST" },{ code: "18", religion: "WORLDWIDE CHURCH OF GOD" },
+  { code: "19", religion: "PRESBYTERIAN" },{ code: "20", religion: "CHURCH OF CHRIST" },{ code: "99", religion: "UNKNOWN" },
+  { code: "21", religion: "DISCIPLES OF CHRIST" },{ code: "22", religion: "EVANGELICAL CONVENANT" },
+  { code: "23", religion: "GREEK ORTHODOX" },{ code: "24", religion: "NAZARENE" },{ code: "25", religion: "FRIENDS (QUAKERS)" },
+  { code: "26", religion: "RUSSIAN ORTHODOX" },{ code: "27", religion: "UNITARIAN UNIVERSALIST" },{ code: "28", religion: "OTHER" },
+  { code: "29", religion: "BRETHREN" },{ code: "30", religion: "FREE METHODIST" },{ code: "31", religion: "ALLIANCE BIBLE" },
+  { code: "32", religion: "BIBLE CHURCH" },{ code: "33", religion: "CHRISTIAN METH EPISCOPAL" },
+  { code: "34", religion: "CHURCH OF GOD" },{ code: "35", religion: "CHURCH OF GOD IN PROPHECY" },
+  { code: "36", religion: "MENNONITE" },{ code: "37", religion: "MORAVIAN" },{ code: "38", religion: "SALVATION ARMY" },
+  { code: "39", religion: "WESLEYAN" },{ code: "40", religion: "BAHA'I" },{ code: "41", religion: "CHURCH OF RELIGIOUS SCI" },
+  { code: "42", religion: "ECKANKAR" },{ code: "43", religion: "REFORMED LDS" },{ code: "44", religion: "CHRISTIAN CHURCH" },
+  { code: "45", religion: "DRUID" },{ code: "46", religion: "WICCAN" }
 ];
