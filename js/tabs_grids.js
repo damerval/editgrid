@@ -2,6 +2,8 @@
  * Created by pdamerval on 10/4/2016.
  */
 
+var selectedOffender = 0;
+
 var setupTabs = function(tabObj) {
   tabObj.jqxTabs({ width: 800, height: 600, theme: 'metro' });
 };
@@ -25,7 +27,8 @@ var setupOffenderGrid = function(gridObj) {
       { name: 'sex', type: 'string' },
       { name: 'raceCode', type: 'string' },
       { name: 'race', value: 'raceCode', values: { source: RACES, value: 'code', name: 'race' } },
-      { name: 'religionCode', type: 'string' }
+      { name: 'religionCode', type: 'string' },
+      { name: 'religion', value: 'religionCode', values: { source: RELIGIONS, value: 'code', name: 'religion' } }
     ],
     dataType: 'json',
     id: 'offenderId',
@@ -40,12 +43,12 @@ var setupOffenderGrid = function(gridObj) {
     altrows: true,
     columns: [
       { text: "Name", dataField: 'fullName', width: 220 },
-      { text: "Hair color", dataField: 'hairColorCode', displayField: 'hairColor', width: 95 },
-      { text: "Eye color", dataField: 'eyeColorCode', displayField: 'eyeColor', width: 65 },
+      { text: "Hair color", dataField: 'hairColorCode', displayField: 'hairColor', width: 90 },
+      { text: "Eye color", dataField: 'eyeColorCode', displayField: 'eyeColor', width: 70 },
       { text: "Height", dataField: 'height', width: 55 },
       { text: "Sex", dataField: 'sex', width: 60 },
       { text: "Race", dataField: 'raceCode', displayField: 'race', width: 150 },
-      { text: "Religion", dataField: 'religionCode', width: 130 }
+      { text: "Religion", dataField: 'religionCode', displayField: 'religion', width: 130 }
     ],
     sortable: true,
     pageable: true,

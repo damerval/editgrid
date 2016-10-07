@@ -16,6 +16,6 @@ echo getSet(
      CASE o.sex WHEN 'M' then 'Male' WHEN 'F' THEN 'Female' WHEN 'G' then 'Transgender' when 'N' then 'Unknown' END as sex ,
      o.race_cd as raceCode, o.rlgn_cd as religionCode
   from ofndr o
-  where o.ofndr_num between 400000 and 700000
+  where o.ofndr_num between 400000 and 700000 and o.rlgn_cd not in ('00','99')
   order by newid()) t ORDER BY t.fullName", null
 );
