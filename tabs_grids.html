@@ -42,17 +42,24 @@
 
   <!--********** DOCUMENT.READY() **********-->
   <script type="text/javascript" language="javascript">
+
     $(document).ready(function() {
       var btnTest = $("#offenderTestButton");
       var btnSecond = $("#offenderSecondButton");
       var btnThird = $("#offenderThirdButton");
-      setupTabs($("#tabs"));
+      var btnLocationTest = $("#locationTestButton");
+      var btnLocationSecond = $("#locationSecondButton");
+      var btnLocationThird = $("#locationThirdButton");
       setupOffenderButtonBar($("#offenderButtonBar"));
+      setupLocationButtonBar($("#locationButtonBar"));
       setupOffenderGrid($("#offenderGrid"));
-      setupButtons([btnTest, btnSecond, btnThird]);
+      setupOffenderLocationsGrid($("#locationGrid"));
+      setupButtons([btnTest, btnSecond, btnThird, btnLocationTest, btnLocationSecond, btnLocationThird]);
       btnTest.on('click', function() {
 
       });
+      setupTabs($("#tabs"));
+
     });
   </script>
 
@@ -68,6 +75,9 @@
   </ul>
   <div id="offenderTab">
     <div id="offenderButtonBar">
+      <input type="button" id="offenderTestButton" value="Test"/>
+      <input type="button" id="offenderSecondButton" value="Second Button"/>
+      <input type="button" id="offenderThirdButton" value="Third Button"/>
     </div>
     <div id="offenderGrid"></div>
   </div>
@@ -77,11 +87,11 @@
       <input type="button" id="locationSecondButton" value="Second Button"/>
       <input type="button" id="locationThirdButton" value="Third Button"/>
     </div>
-    <div id="locationGrid"
+    <div id="locationGrid"></div>
   </div>
   <div id="legalStatusTab"></div>
 </div>
-
+<div id="currentOffender">No offender selected</div>
 </body>
 
 </html>
