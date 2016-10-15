@@ -6,17 +6,17 @@ var currentOffenderBox;
 var locationGrid;
 
 var locationCodesSource = {
-  url: "/require/locationCodes.php",
+  url: "require/locationCodes.php",
   dataFields: [
-    { name: 'code', type: 'int' },
-    { name: 'location', type: 'string' }
+    { name: 'locationCode', type: 'int' },
+    { name: 'locationDesc', type: 'string' }
   ],
   dataType: 'json',
-  id: 'code'
+  id: 'locationCode'
 };
 
 var offenderSource = {
-  url: "/require/offenderList.php",
+  url: "require/offenderList.php",
   dataFields: [
     { name: 'offenderId', type: 'int' },
     { name: 'fullName', type: 'string' },
@@ -47,7 +47,7 @@ var offenderColumns =  [
 ];
 
 var locationSource = {
-  url: "/require/offenderLocations.php",
+  url: "require/offenderLocations.php",
   data: { offenderId: currentOffender },
   dataFields: [
     { name: 'locationCode', type: 'int' },

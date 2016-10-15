@@ -9,5 +9,5 @@
 require_once ("sqlSrv.php");
 
 echo getSet("
-  select rtrim(body_loc_cd) code, rtrim(body_loc_desc) location from body_loc_cd where vld_flg='Y'
+  select rtrim(body_loc_cd) locationCode, rtrim(body_loc_desc) locationDesc from body_loc_cd where vld_flg='Y'
 ", null);
