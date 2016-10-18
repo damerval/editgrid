@@ -8,11 +8,23 @@ var locationGrid;
 var locationCodesSource = {
   url: "require/locationCodes.php",
   dataFields: [
-    { name: 'locationCode', type: 'int' },
+    { name: 'locationCode', type: 'string' },
     { name: 'locationDesc', type: 'string' }
   ],
   dataType: 'json',
-  id: 'locationCode'
+  id: 'locationCode',
+  async: false
+};
+
+var reasonCodesSource = {
+  url: "require/reasonCodes.php",
+  dataField: [
+    { name: 'rCode', type: 'int' },
+    { name: 'rDesc', type: 'string' }
+  ],
+  dataType: 'json',
+  id: 'rCode',
+  async: false
 };
 
 var offenderSource = {
@@ -50,12 +62,22 @@ var locationSource = {
   url: "require/offenderLocations.php",
   data: { offenderId: currentOffender },
   dataFields: [
-    { name: 'locationCode', type: 'int' },
+    { name: 'locationCode', type: 'string' },
     { name: 'location', value: 'locationCode',
-        values: { source: (new $.jqx.dataAdapter(locationCodesSource)).records, value: 'code', name: 'location'}},
+        values: {
+          source: (new $.jqx.dataAdapter(locationCodesSource, { autoBind: true })).records,
+          value: 'locationCode',
+          name: 'locationDesc'
+        }},
     { name: 'start', map: 'start>date', type: 'date' },
     { name: 'startTime', map: 'startTime>date', type: 'date' },
     { name: 'reasonCode', type: 'int' },
+    { name: 'reason', value: 'reasonCode',
+      values: {
+        source: (new $.jqx.dataAdapter(reasonCodesSource, { autoBind: true })).records,
+        value: 'rCode',
+        name: 'rDesc'
+      }},
     { name: 'endDate', map: 'endDate>date', type: 'date' }
   ],
   dataType: 'json',
@@ -64,10 +86,10 @@ var locationSource = {
 
 var locationColumns = [
   { text: "Location", dataField: 'locationCode', displayField: 'location' },
-  { text: "Start", dataField: 'start', cellsformat: 'MM/dd/yyyy' },
-  { text: "Start Time", dataField: 'startTime', cellsformat: 'HH:mm' },
-  { text: "Reason", dataField: 'reasonCode' },
-  { text: "End", dataField: 'endDate', cellsFormat: 'MM/dd/yyyy' }
+  { text: "Start", dataField: 'start', cellsformat: 'MM/dd/yyyy', width: 100 },
+  { text: "Start Time", dataField: 'startTime', cellsformat: 'HH:mm', width: 100 },
+  { text: "Reason", dataField: 'reasonCode', displayField: 'reason' },
+  { text: "End", dataField: 'endDate', cellsFormat: 'MM/dd/yyyy', width: 100 }
 ];
 
 $(document).ready( function() {
@@ -77,7 +99,7 @@ $(document).ready( function() {
 
 var setupTabs = function(tabObj) {
   tabObj.jqxTabs({
-    width: 800, height: 600, theme: 'metro',
+    width: 800, height: 605, theme: 'metro',
     animationType: 'fade', contentTransitionDuration: 250
   });
 };
@@ -103,7 +125,7 @@ var setupOffenderGrid = function(gridObj) {
   });
 
   gridObj.on('rowselect', function(event) {
-    currentOffenderBox.text(event.args.row['fullName']);
+    currentOffenderBox.text(event.args.row['offenderId'] + ' - ' + event.args.row['fullName']);
     currentOffender = event.args.row['offenderId'];
     locationSource.data = { offenderId: currentOffender };
     locationGrid.jqxGrid('source', new $.jqx.dataAdapter(locationSource));
@@ -119,7 +141,7 @@ var setupButtons = function(buttonsArray) {
 function setupOffenderLocationsGrid(gridObj) {
 
   gridObj.jqxGrid({
-    width: 775, height: 515, theme: 'metro',
+    width: 776, height: 515, theme: 'metro',
     source: new $.jqx.dataAdapter(locationSource),
     columns: locationColumns,
     altrows: true,

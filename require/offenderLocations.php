@@ -15,7 +15,7 @@ if ($selectedOffender != 0) {
 
   $return = getSet("
     select
-      olh.body_loc_cd locationCode, olh.assgn_dt [start], cast(olh.assgn_tm as time) [startTime], 
+      rtrim(olh.body_loc_cd) locationCode, olh.assgn_dt [start], cast(olh.assgn_tm as time) [startTime], 
       olh.assgn_rsn_cd reasonCode, olh.end_dt [endDate]
     from ofndr_loc_hist olh
     where ofndr_num = ". $selectedOffender . "
