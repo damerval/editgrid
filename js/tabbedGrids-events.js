@@ -5,6 +5,8 @@ $(document).ready(function () {
     currentOffender = event.args.row['offenderId'];
     locationSource.data = {offenderId: currentOffender};
     wgtOffenderLocations.jqxGrid('source', new $.jqx.dataAdapter(locationSource));
+    legalStatusSource.data = {offenderId: currentOffender};
+    wgtLegalStatus.jqxGrid('source', new $.jqx.dataAdapter(legalStatusSource));
   });
 
 });

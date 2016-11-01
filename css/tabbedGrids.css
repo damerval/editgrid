@@ -1,7 +1,10 @@
-#offenderGrid, #locationGrid { margin-left: 10px }
-#offenderButtonBar, #locationButtonBar { margin-left: 10px; margin-top: 10px; margin-bottom: -1px }
+#offenderGrid, #locationGrid, #legalStatusGrid { margin-left: 10px }
+#offenderButtonBar, #locationButtonBar, #legalStatusButtonBar {
+  margin-left: 10px; margin-top: 10px; margin-bottom: -1px
+}
 #offenderTestButton, #offenderSecondButton, #offenderThirdButton,
-#locationTestButton, #locationSecondButton, #locationThirdButton {
+#locationTestButton, #locationSecondButton, #locationThirdButton,
+#legalTestButton, #legalSecondButton, #legalThirdButton {
   margin-left: 5px; margin-top: 5px
 }
 #tabs { position: relative }

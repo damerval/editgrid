@@ -38,6 +38,8 @@ var offenderColumns =  [
   { text: "Religion", dataField: 'religionCode', displayField: 'religion', width: 130 }
 ];
 
+var offenderGridAdapter;
+
 /*** OFFENDER BUTTON BAR ***/
 var wgtOffenderButtonBar;
 var btnOffTest;
@@ -109,3 +111,69 @@ var wgtLocationsButtonBar;
 var btnLocTest;
 var btnLocSecond;
 var btnLocThird;
+
+/*** LEGAL STATUS CODES FK ***/
+var legStatCodesSource = {
+  url: "require/legalStatusCodes.php",
+  dataFields: [
+    { name: 'valKey', type: 'string' },
+    { name: 'valDesc', type: 'string' }
+  ],
+  dataType: 'json',
+  id: 'valKey',
+  async: false
+};
+
+/*** LEGAL STATUS CHANGE CODES FK ***/
+var legStatChangeCodesSource = {
+  url: "require/legalStatusChangeCodes.php",
+  dataFields: [
+    { name: 'valKey', type: 'int' },
+    { name: 'valDesc', type: 'string' }
+  ],
+  dataType: 'json',
+  id: 'valKey',
+  async: false
+};
+
+/*** LEGAL STATUS GRID DATA SETUP ***/
+var wgtLegalStatus;
+var legalStatusSource = {
+  url: "require/offenderLegalStatus.php",
+  data: { offenderId: currentOffender },
+  dataFields: [
+    { name: 'statCode', type: 'string' },
+    { name: 'status', type: 'string', value: 'statCode',
+      values: {
+        source: (new $.jqx.dataAdapter(legStatCodesSource, { autoBind: true })).records,
+        value: 'valKey', name: 'valDesc'
+      }
+    },
+    { name: 'chgCode', type: 'int' },
+    { name: 'changeReason', type: 'int', value: 'chgCode',
+      values: {
+        source: (new $.jqx.dataAdapter(legStatChangeCodesSource, { autoBind: true })).records,
+        value: 'valKey', name: 'valDesc'
+      }
+    },
+    { name: 'beginDt', map: 'beginDt>date', type: 'date' },
+    { name: 'beginTm', map: 'beginTm>date', type: 'date' },
+    { name: 'endDt', map: 'endDt>date', type: 'date' }
+  ],
+  dataType: 'json',
+  pageSize: 16
+};
+
+var legalStatusColumns = [
+  { text: 'Status', dataField: 'statCode', displayField: 'status', width: 200 },
+  { text: 'Started on', dataField: 'beginDt', cellsformat: 'MM/dd/yyyy', width: 100 },
+  { text: 'At', dataField: 'beginTm', cellsformat: 'HH:mm', width: 50 },
+  { text: 'Change reason', dataField: 'chgCode', displayField: 'changeReason', width: 326 },
+  { text: 'Ended on', dataField: 'endDt', cellsformat: 'MM/dd/yyyy', width: 100 }
+];
+
+/*** LEGAL STATUS BUTTON BAR ***/
+var wgtLegalStatusButtonBar;
+var btnLegTest;
+var btnLegSecond;
+var btnLegThird;
