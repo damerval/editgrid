@@ -35,6 +35,7 @@
   <script type="text/javascript" src="resources/race.js"></script>
   <script type="text/javascript" src="resources/religion.js"></script>
   <script type="text/javascript" src="resources/locationStatuses.js"></script>
+  <script type="text/javascript" src="js/utilities.js"></script>
   <script type="text/javascript" src="js/tabbedGrids-data.js"></script>
   <script type="text/javascript" src="js/tabbedGrids-widgets.js"></script>
   <script type="text/javascript" src="js/tabbedGrids-events.js"></script>
@@ -48,6 +49,7 @@
     <li style="margin-left: 5px">Offenders</li>
     <li>Location history</li>
     <li>Legal status history</li>
+    <li>Fact sheet</li>
   </ul>
   <div id="offenderTab">
     <div id="offenderButtonBar">
@@ -72,6 +74,38 @@
       <input type="button" id="legalThirdButton" value="Third Button"/>
     </div>
     <div id="legalStatusGrid"></div>
+  </div>
+  <div id="factSheetTab">
+    <div id="vignette">
+      <div id="vignettePhoto">
+
+      </div>
+      <div id="vignetteForm">
+        <div class="vignetteFormLine">
+          <div class="vignetteLabel">Offender ID: </div><div  id="valOffenderID" class="vignetteValue"></div>
+          <div class="vignetteLabel">Offender Name: </div><div id="valOffenderName" class="vignetteValue"></div>
+        </div>
+        <div class="vignetteFormLine">
+          <div class="vignetteLabel">Location: </div><div id="valLocation" class="vignetteValue"></div>
+          <div class="vignetteLabel">D.O.B.:</div><div id="valDateOfBirth" class="vignetteValue"></div>
+          <div class="vignetteLabel">Gender: </div><div id="valGender" class="vignetteValue"></div>
+        </div>
+        <div class="vignetteFormLine">
+          <div class="vignetteLabel">Legal Status: </div><div id="valLegalStatus" class="vignetteValue"></div>
+          <div class="vignetteLabel">Bed Assignment: </div><div id="valBed" class="vignetteValue"></div>
+          <div class="vignetteLabel">Supervision Level: </div><div id="valSupervision" class="vignetteValue"></div>
+          <div class="vignetteLabel">Scheduled Release: </div><div id="valScheduledRelease" class="vignetteValue"></div>
+          <div class="vignetteLabel">Arrival: </div><div id="valIntakeDate" class="vignetteValue"></div>
+        </div>
+        <div class="vignetteFormLine">
+          <div class="vignetteLabel">Sex offender? </div><div id="valSexOffender" class="vignetteValue"></div>
+          <div class="vignetteLabel">Criminal Degree: </div><div id="valCriminalDegree" class="vignetteValue"></div>
+          <div class="vignetteLabel">Ad. Seg.: </div><div id="valAdSeg" class="vignetteValue"></div>
+          <div class="vignetteLabel">PreA. Status: </div><div id="valPreAStatus" class="vignetteValue"></div>
+        </div>
+      </div>
+      <div style="clear: both"></div>
+    </div>
   </div>
 </div>
 <div id="currentOffender">No offender selected</div>

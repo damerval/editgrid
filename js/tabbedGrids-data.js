@@ -177,3 +177,22 @@ var wgtLegalStatusButtonBar;
 var btnLegTest;
 var btnLegSecond;
 var btnLegThird;
+
+/*** VIGNETTE PHOTO DIV ***/
+var vignettePhoto;
+
+/*** VIGNETTE FORM VALUES ***/
+var vignetteOffenderID;
+var vignetteOffenderName;
+var vignetteLocation;
+var vignetteDOB;
+var vignetteGender;
+var vignetteLegalStatus;
+var vignetteBedAssignment;
+var vignetteSupervisionLevel;
+var vignetteScheduledRelease;
+var vignetteArrivalDate;
+var vignetteSexOffender;
+var vignetteCriminalDegree;
+var vignetteAdSeg;
+var vignettePreAStatus;

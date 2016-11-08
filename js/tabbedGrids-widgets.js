@@ -63,4 +63,22 @@ $(document).ready(function() {
         btnLegTest, btnLegSecond, btnLegThird],
       { width: 100, height: 25, theme: 'metro' }
   );
+
+  vignettePhoto = $("#vignettePhoto");
+
+  vignetteOffenderID = $("#valOffenderID");
+  vignetteOffenderName = $("#valOffenderName");
+  vignetteLocation = $("#valLocation");
+  vignetteDOB = $("#valDateOfBirth");
+  vignetteGender = $("#valGender");
+  vignetteLegalStatus = $("#valLegalStatus");
+  vignetteBedAssignment = $("#valBed");
+  vignetteSupervisionLevel = $("#valSupervision");
+  vignetteScheduledRelease = $("#valScheduledRelease");
+  vignetteArrivalDate = $("#valIntakeDate");
+  vignetteSexOffender = $("#valSexOffender");
+  vignetteCriminalDegree = $("#valCriminalDegree");
+  vignetteAdSeg = $("#valAdSeg");
+  vignettePreAStatus = $("#valPreAStatus");
+
 });
