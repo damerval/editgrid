@@ -7,17 +7,20 @@
 #legalTestButton, #legalSecondButton, #legalThirdButton {
   margin-left: 5px; margin-top: 5px
 }
+
+#container { position: relative; width: 825px }
+
 #tabs { position: relative }
 #currentOffender {
-  position: absolute; top: 13px; left: 620px;
+  position: absolute; top: 5px; right: 30px;
   background-color: ghostwhite; line-height: 20px;
   padding: 0 5px; border: 1px solid lightgrey;
   font-family: 'segoe ui', arial, sans-serif;
   font-size: 8pt;
 }
 .vignetteFormLine { float: none; clear: both }
-.vignetteLabel { float: left }
-.vignetteValue { float: left }
+.vignetteLabel { float: left; padding: 6px 3px 6px 6px ; font-size: 11px }
+.vignetteValue { float: left; padding: 3px; font-size: 14px; font-weight: bold; color: darkblue }
 
 #vignettePhoto {
   background-image: url("/require/getPhoto.php?id=656625");
@@ -29,13 +32,36 @@
 
 #vignetteForm {
   float: left; clear: right;
+  margin-left: 5px;
+  width: 527px
 }
 
 #vignette {
   border: 1px solid lightgrey;
   clear: both;
-  width: 90%;
+  width: 92%;
   margin: 20px;
   padding: 15px
 }
+
+.five { width: 5% }
+.ten { width: 10% }
+.fifteen { width: 15% }
+.twenty { width: 17% }
+.twentyFive { width: 25% }
+.thirty { width: 30% }
+.thirtyFive { width: 35% }
+.forty { width: 40% }
+.fortyFive { width: 45% }
+.fifty { width: 50% }
+.fiftyFive { width: 55% }
+.sixty { width: 60% }
+.sixtyFive { width: 65% }
+.seventy { width: 70% }
+.seventyFive { width: 75% }
+.eighty { width: 80% }
+.eightyFive { width: 85% }
+.ninety { width: 90% }
+.ninetyFive { width: 95% }
+.fullWidth { width: 100% }
 

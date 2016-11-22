@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Webcam Test</title>
+
+  <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.base.css" type="text/css">
+  <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.metro.css" type="text/css">
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="webcam.min.js"></script>
+  <script src="lib/jqwidgets/jqxcore.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxwindow.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxscrollbar.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxbuttons.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxpanel.js" type="text/javascript"></script>
+
+  <!-- Cropping assets -->
+  <link rel="stylesheet" href="croppie/croppie.css">
+  <script type="application/javascript" src="croppie/croppie.js"></script>
+
+  <style type="text/css">
+    #imageBox { width: 320px; height: 240px; background-color: lightgrey; margin: 8px; position: relative }
+    #imageButtons { margin-left: 8px }
+    #camButtons { margin: 5px 0 0 5px }
+    #camBox { margin: 5px 0 0 5px }
+    #imagePanel { float: left; clear: left }
+    #rightSide { 
+      height: 285px; width: 150px; 
+      float: left; clear: right;
+      margin-left: 5px;
+    }
+    #uploadFile { visibility: hidden }
+    #cropWindow { width: 600px; height: 400px; border: 1px solid lightblue; box-sizing: border-box }
+    #croppedImageContainer { width: 185px; height: 225px; border: 1px solid lightblue }
+  </style>
+
+  <script type="text/javascript" language="javascript">
+
+    var picture;
+    var cropOriginal;
+
+    function setPicture(widget, height, width) {
+      if (!width) width = 320;
+      if (!height) height = 240;
+      widget.html('<img src="' + picture + '" width="' + width + '" height="' + height +'" />');
+    }
+
+    function takeSnapshot(dest) {
+      Webcam.snap(function(data_uri) {
+        picture = data_uri;
+        setPicture(dest);
+        cropOriginal.croppie('bind', { url: picture });
+      });
+    }
+
+    $(document).ready(function() {
+
+      var snapButton = $("#snapButton");
+      var imagePanel = $("#imagePanel").jqxPanel({ width: 340, height: 285, theme: 'metro' });
+      var snapPhotoButton = $("#snapPhotoButton").jqxButton({ width: 100, height: 23, theme: 'metro' });
+      var cancelSnap = $("#cancelSnap").jqxButton({ width: 75, height: 23, theme: 'metro' });
+      var chooseImageButton = $("#chooseImageButton").jqxButton({ width: 150, height: 23, theme: 'metro' });
+      var imageBox = $("#imageBox");
+      var submitButton = $("#submitButton").jqxButton({ width: 75, height: 23, theme: 'metro', disabled: true });
+      var uploadFile = $("#uploadFile");
+      cropOriginal = $("#cropTestImage");
+
+      Webcam.set({
+        width: 320, height: 240, image_format: 'jpeg', jpeg_quality: 100, dest_height: 480, dest_width: 640
+      });
+
+      snapButton.jqxButton({ width: 150, height: 23, theme: 'metro' });
+
+      snapButton.on('click', function() {
+        takeSnapshot(imageBox);
+      });
+
+      var webcamWindow = $("#webcamWindow").jqxWindow({
+        height: 310, width: 340, position: {x: 200, y: 150},
+        autoOpen: false, okButton: snapButton, cancelButton: cancelSnap,
+        isModal: true
+      });
+
+      snapPhotoButton.on('click', function() {
+        webcamWindow.jqxWindow('open');
+        Webcam.attach('#camBox');
+      });
+
+      webcamWindow.on('close', function(event) {
+        if (event.args.dialogResult.OK) {
+          submitButton.jqxButton({disabled: false});
+        } else {
+          submitButton.jqxButton({disabled: true});
+        }
+        Webcam.reset();
+        picture = null;
+      });
+
+      submitButton.on('click', function() {
+        Webcam.upload(picture, 'upload.php', function(code, text) {
+          if (code === 200) {
+            submitButton.jqxButton({disabled: true});
+          } else {
+            alert(code + " " + text);
+          }
+        });
+      });
+
+      chooseImageButton.on('click', function() {
+        uploadFile.click();
+      });
+
+      uploadFile.on('change', function(event) {
+        if (event.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            picture = e.target.result;
+            submitButton.jqxButton({ disabled: false });
+            setPicture(imageBox);
+            cropOriginal.croppie('bind', { url: picture });
+          };
+          reader.readAsDataURL(event.target.files[0]);
+        }
+      });
+
+      cropOriginal.croppie({ boundary: { width: 300, height: 300 }, viewport: { width: 180, height: 225 }});
+      var cropButton = $("#cropButton").jqxButton({ width: 75, height: 23, theme: 'metro' });
+      cropButton.on('click', function() {
+        $("#cropTestImage").croppie('result', {
+          type: 'canvas',
+          size: 'viewport'
+        }).then(function(crop) {
+          picture = crop;
+          $("#croppedImage").attr('src', crop);
+          setPicture(imageBox, 225, 180);
+        });
+      });
+    });
+
+  </script>
+
+</head>
+<body>
+
+  <div id="imagePanel">
+    <div id="imageBox"></div>
+    <div id="imageButtons">
+      <input type="button" id="snapPhotoButton" value="Take Photo"/>
+      <input type="button" id="chooseImageButton" value="Upload existing picture"/>
+    </div>
+  </div>
+  <div id="rightSide">
+    <input type="button" id="submitButton" value="Submit">
+    <input id="uploadFile" type="file" accept="image/*">
+    <div id="croppedImageContainer"><img id="croppedImage" src="" alt="Cropped Image" height="225" width="180"/></div>
+  </div>
+  <div style="clear:both; float: none;"></div>
+
+  <div id="cropWindow">
+    <img src="images/bigCats.jpg" alt="Big cats" id="cropTestImage"/>
+  </div>
+  <input type="button" id="cropButton" value="Crop">
+
+  <div id="webcamWindow">
+    <div>Webcam capture</div>
+    <div>
+      <div id="camBox"></div>
+      <div id="camButtons">
+        <input type="button" id="snapButton" value="Capture photo"/>
+        <input type="button" id="cancelSnap" value="Cancel">
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -18,3 +18,11 @@ function isJson(item) {
 
 
 }
+
+function blankIfNull(val) {
+  return (null !== val) ? val : '';
+}
+
+function dfWithNull(dbDate, mask, utc) {
+  return (null !== dbDate) ? dateFormat(Date.parse(dbDate.date), mask, utc) : '';
+}

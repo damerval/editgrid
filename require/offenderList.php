@@ -26,10 +26,14 @@ echo getSet("
       WHEN 'N'
         THEN 'Unknown' END                                                                 AS sex,
       o.race_cd                                                                            AS raceCode,
-      o.rlgn_cd                                                                            AS religionCode
+      o.rlgn_cd                                                                            AS religionCode,
+      (SELECT body_loc_cd from ofndr_loc_hist where ofndr_loc_hist.ofndr_num=o.ofndr_num and end_dt is null)
+        as location
     FROM ofndr o
-    WHERE o.rlgn_cd NOT IN ('00', '99') 
-    AND (SELECT count(*) from ofndr_photo where ofndr_photo.ofndr_num=o.ofndr_num) > 0 
-  ) t ORDER BY newid()
+    WHERE o.rlgn_cd NOT IN ('99', '00')
+    AND (SELECT count(*) from ofndr_photo where ofndr_photo.ofndr_num=o.ofndr_num) > 0
+  ) t 
+  WHERE location BETWEEN 100 and 399
+  ORDER BY newid();
 ", null
 );
