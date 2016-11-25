@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.metro.css" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+  <script src="webcam.min.js"></script>
+  <link rel="stylesheet" href="croppie/croppie.css">
+  <script type="application/javascript" src="croppie/croppie.js"></script>
   <script src="lib/jqwidgets/jqxcore.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxdata.js" type="text/javascript"></script>
   <script src="lib/jqwidgets/jqxbuttons.js" type="text/javascript"></script>
@@ -124,8 +127,50 @@
         </div>
         <div style="clear: both"></div>
       </div>
+      <fieldset id="newPhotoPanel"><legend> Replace current photo </legend>
+        <div style="float: none; clear: both">
+          <div id="newPhotoBox"></div>
+          <div id="newPhotoButtons">
+            <input type="button" id="webcamButton" value=" Take Photo (webcam) "/>
+            <input type="button" id="uploadButton" value=" Upload from PC " />
+            <input type="button" id="cropWindowButton" value=" Crop image "/>
+            <input type="button" id="submitButton" value=" Submit image "/>
+            <input id="uploadFile" type="file" accept="image/*">
+          </div>
+        </div>
+      </fieldset>
     </div>
   </div>
+
+  <div id="webcamWindow">
+    <div>Snap webcam picture</div>
+    <div>
+      <div id="camBox"></div>
+      <div id="camButtons">
+        <input type="button" id="snapButton" value="Capture photo"/>
+        <input type="button" id="cancelSnap" value="Cancel">
+      </div>
+    </div>
+  </div>
+
+  <div id="cropImageWindow">
+    <div>Crop picture</div>
+    <div style="padding: 15px">
+      <div class="helpBox">
+        Click and drag the picture behind the viewport.
+        Zoom where possible by dragging the slider below the image or using your mouse wheel.
+        Click "crop" to finalize or "cancel" to return to the previous screen.
+      </div>
+      <div id="cropBoundary">
+        <img  src="" alt="Image to crop" id="imageToCrop"/>
+      </div>
+      <div id="cropWindowButtonBar" class="clear">
+        <input type="button" id="cropButton" value="Crop">
+        <input type="button" id="cropCancelButton" value="Cancel">
+      </div>
+    </div>
+  </div>
+
   <div id="currentOffender">No offender selected</div>
 </div>
 

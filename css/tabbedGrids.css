@@ -23,9 +23,8 @@
 .vignetteValue { float: left; padding: 3px; font-size: 14px; font-weight: bold; color: darkblue }
 
 #vignettePhoto {
-  background-image: url("/require/getPhoto.php?id=656625");
-  height: 250px;
-  width: 200px;
+  height: 225px;
+  width: 180px;
   background-size: contain;
   float: left; clear: left;
 }
@@ -40,7 +39,7 @@
   border: 1px solid lightgrey;
   clear: both;
   width: 92%;
-  margin: 20px;
+  margin: 15px;
   padding: 15px
 }
 
@@ -65,3 +64,38 @@
 .ninetyFive { width: 95% }
 .fullWidth { width: 100% }
 
+#newPhotoPanel {
+  height: 260px; width: 755px;
+  margin-left: 15px; padding: 5px
+}
+
+#newPhotoPanel legend { display: block; padding-left: 5px; padding-right: 5px }
+
+#newPhotoBox {
+  width: 320px; height: 240px; background-color: lightgrey;
+  margin-left: 5px; position: relative; float: left;
+}
+#newPhotoBox img { display: block; margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0 }
+
+#newPhotoButtons { width: 300px; height: 240px; margin-left: 5px; float: left; padding: 5px }
+
+#newPhotoButtons input { margin-bottom: 15px }
+
+#uploadFile { visibility: hidden }
+
+#cropBoundary { width: 300px; height: 300px }
+
+.helpBox {
+  width: 90%; margin: 0 auto 5px auto; display: block;
+  font-size: smaller; font-style: italic;
+  box-sizing: content-box; border: 1px dotted lightgrey
+}
+#cropWindowButtonBar {margin-top: 70px; width: 300px }
+#cropButton { float: left }
+#cropCancelButton { float: right }
+.clear { float: none; clear: both }
+
+#camBox { margin: 5px 0 0 5px }
+#camButtons { float: none; clear: both; width: 320px; margin: 5px 0 0 5px  }
+#snapButton { float: left }
+#cancelSnap { float: right }

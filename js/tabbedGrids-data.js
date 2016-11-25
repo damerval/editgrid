@@ -180,6 +180,7 @@ var btnLegThird;
 
 /*** VIGNETTE PHOTO DIV ***/
 var vignettePhoto;
+var vignetteObj = {};
 
 /*** VIGNETTE FORM VALUES ***/
 var vignetteOffenderID;
@@ -196,3 +197,19 @@ var vignetteSexOffender;
 var vignetteCriminalDegree;
 var vignetteAdSeg;
 var vignettePreAStatus;
+
+/**** NEW PHOTO CONTROLS ****/
+var picture;
+var webcamButton;
+var uploadButton;
+var cropWindowButton;
+var submitButton;
+var cropImageWindow;
+var webcamWindow;
+var snapButton;
+var cancelSnap;
+var cropButton;
+var cropCancelButton;
+var uploadFile;
+var newPhotoBox;
+var imageToCrop;

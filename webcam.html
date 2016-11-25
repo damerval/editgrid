@@ -21,6 +21,7 @@
 
   <style type="text/css">
     #imageBox { width: 320px; height: 240px; background-color: lightgrey; margin: 8px; position: relative }
+    #imageBox img { display: block; margin: auto; position: absolute; left: 0; right: 0; top: 0; bottom: 0 }
     #imageButtons { margin-left: 8px }
     #camButtons { margin: 5px 0 0 5px }
     #camBox { margin: 5px 0 0 5px }
@@ -31,8 +32,20 @@
       margin-left: 5px;
     }
     #uploadFile { visibility: hidden }
-    #cropWindow { width: 600px; height: 400px; border: 1px solid lightblue; box-sizing: border-box }
-    #croppedImageContainer { width: 185px; height: 225px; border: 1px solid lightblue }
+    #cropBoundary { width: 300px; height: 300px }
+    #cropWindowButtonBar {margin-top: 70px; width: 300px }
+    #cropButton { float: left }
+    #cropCancelButton { float: right }
+    .clear { float: none; clear: both }
+    #camButtons { float: none; clear: both; width: 320px }
+    #snapButton { float: left }
+    #cancelSnap { float: right }
+    .helpBox {
+      width: 90%; margin: 0 auto 5px auto; display: block;
+      font-size: smaller; font-style: italic;
+      box-sizing: content-box; border: 1px dotted lightgrey
+    }
+
   </style>
 
   <script type="text/javascript" language="javascript">
@@ -50,7 +63,6 @@
       Webcam.snap(function(data_uri) {
         picture = data_uri;
         setPicture(dest);
-        cropOriginal.croppie('bind', { url: picture });
       });
     }
 
@@ -63,6 +75,9 @@
       var chooseImageButton = $("#chooseImageButton").jqxButton({ width: 150, height: 23, theme: 'metro' });
       var imageBox = $("#imageBox");
       var submitButton = $("#submitButton").jqxButton({ width: 75, height: 23, theme: 'metro', disabled: true });
+      var cropWindowButton = $("#cropWindowButton").jqxButton({ width: 63, height: 23, theme: 'metro' });
+      var cropButton = $("#cropButton").jqxButton({ width: 65, height: 23, theme: 'metro' });
+      var cropCancelButton = $("#cropCancelButton").jqxButton({ width: 75, height: 23, theme: 'metro' });
       var uploadFile = $("#uploadFile");
       cropOriginal = $("#cropTestImage");
 
@@ -82,9 +97,20 @@
         isModal: true
       });
 
+      var cropWindow = $("#cropWindow").jqxWindow({
+        height: 515, width: 330, position: {x: 200, y: 150},
+        autoOpen: false, okButton: cropButton, cancelButton: cropCancelButton,
+        isModal: true
+      });
+
       snapPhotoButton.on('click', function() {
         webcamWindow.jqxWindow('open');
         Webcam.attach('#camBox');
+      });
+
+      cropWindowButton.on('click', function() {
+        cropWindow.jqxWindow('open');
+        cropOriginal.croppie('bind', { url: picture });
       });
 
       webcamWindow.on('close', function(event) {
@@ -98,7 +124,7 @@
       });
 
       submitButton.on('click', function() {
-        Webcam.upload(picture, 'upload.php', function(code, text) {
+        Webcam.upload(picture, 'upload.php?offenderNum=123456', function(code, text) {
           if (code === 200) {
             submitButton.jqxButton({disabled: true});
           } else {
@@ -124,16 +150,15 @@
         }
       });
 
-      cropOriginal.croppie({ boundary: { width: 300, height: 300 }, viewport: { width: 180, height: 225 }});
-      var cropButton = $("#cropButton").jqxButton({ width: 75, height: 23, theme: 'metro' });
+      cropOriginal.croppie({ viewport: { width: 180, height: 225 }});
       cropButton.on('click', function() {
         $("#cropTestImage").croppie('result', {
           type: 'canvas',
           size: 'viewport'
         }).then(function(crop) {
           picture = crop;
-          $("#croppedImage").attr('src', crop);
           setPicture(imageBox, 225, 180);
+          submitButton.jqxButton({ disabled: false });
         });
       });
     });
@@ -148,19 +173,14 @@
     <div id="imageButtons">
       <input type="button" id="snapPhotoButton" value="Take Photo"/>
       <input type="button" id="chooseImageButton" value="Upload existing picture"/>
+      <input type="button" id="cropWindowButton" value="Crop"/>
     </div>
   </div>
   <div id="rightSide">
     <input type="button" id="submitButton" value="Submit">
     <input id="uploadFile" type="file" accept="image/*">
-    <div id="croppedImageContainer"><img id="croppedImage" src="" alt="Cropped Image" height="225" width="180"/></div>
   </div>
   <div style="clear:both; float: none;"></div>
-
-  <div id="cropWindow">
-    <img src="images/bigCats.jpg" alt="Big cats" id="cropTestImage"/>
-  </div>
-  <input type="button" id="cropButton" value="Crop">
 
   <div id="webcamWindow">
     <div>Webcam capture</div>
@@ -172,6 +192,25 @@
       </div>
     </div>
   </div>
+
+  <div id="cropWindow">
+    <div>Crop picture</div>
+    <div style="padding: 15px">
+      <div class="helpBox">
+        Click and drag the picture behind the viewport.
+        Zoom where possible by dragging the slider below the image or using your mouse wheel.
+        Click "crop" to finalize or "cancel" to return to the previous screen.
+      </div>
+      <div id="cropBoundary">
+        <img  src="images/bigCats.jpg" alt="Big cats" id="cropTestImage"/>
+      </div>
+      <div id="cropWindowButtonBar" class="clear">
+        <input type="button" id="cropButton" value="Crop">
+        <input type="button" id="cropCancelButton" value="Cancel">
+      </div>
+    </div>
+  </div>
+
 
 </body>
 </html>
