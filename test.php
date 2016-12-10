@@ -15,4 +15,4 @@ $t = microtime(true);
 $micro = sprintf("%06d",($t - floor($t)) * 1000000);
 $d = new DateTime(date('Y-m-d H:i:s.'.$micro, $t));
 $d->sub(DateInterval::createFromDateString('9 hours'));
-print $d->format("Y.m.d_H=i=s.u"); // note at point on "u"
+echo $d->format("Y.m.d_H=i=s.u"); // note at point on "u"

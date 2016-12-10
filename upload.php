@@ -14,7 +14,9 @@ $d = new DateTime(date('Y-m-d H:i:s.'.$micro, $t));
 $d->sub(DateInterval::createFromDateString('9 hours'));
 $timeString = $d->format("Y.m.d_H=i=s.u");
 
+/*
 $pic = fopen($_FILES['webcam']['tmp_name'], 'r');
+
 $params = array(array(&$pic, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_IMAGE));
 $conn = getConnection();
 
@@ -26,6 +28,6 @@ if ($conn) {
   $stmt = sqlsrv_query(getConnection(), $sql, $params);
   if (!$stmt) die (print_r(sqlsrv_errors(SQLSRV_ERR_ALL), true));
 }
-
-move_uploaded_file($_FILES['webcam']['tmp_name'], 'uploads/webcam'. $timeString .'.jpg');
+*/
+move_uploaded_file($_FILES['webcam']['tmp_name'], 'uploads/image.jpg');
 

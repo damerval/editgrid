@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Webcam Dialog Launcher</title>
+
+  <!-- TODO Actualize links -->
+  <link rel="stylesheet" href="lib/jqwidgets/styles/jqx.base.css" type="text/css">
+  <link rel="stylesheet" href="lib/jqwidgets/styles/fresh2.css" type="text/css">
+  <link rel="stylesheet" href="lib/jqwidgets/styles/controls.css" type="text/css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- TODO Actualize links -->
+  <script src="lib/jqwidgets/jqxcore.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxwindow.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxbuttons.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxdata.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxscrollbar.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxlistbox.js" type="text/javascript"></script>
+  <script src="lib/jqwidgets/jqxcombobox.js" type="text/javascript"></script>
+  <script src="webcam.min.js" type="text/javascript"></script>
+
+  <!-- TODO actualize links -->
+  <link rel="stylesheet" href="croppie/croppie.css">
+  <script type="application/javascript" src="croppie/croppie.js"></script>
+
+  <!-- TODO move to companion CSS -->
+  <style type="text/css">
+
+    #photoWindowIcon { float: left }
+
+    #photoWindowTitle { float: left; margin-left: 5px; margin-top: 2px }
+
+    #photoWindowBody { padding: 10px; overflow: visible }
+
+    #imageBox { width: 320px; height: 240px; background-color: aliceblue; float: left; border: 1px solid lightblue }
+
+    #sideButtonsBox { float: right; clear: right; height: 240px; width: 130px }
+    #sideButtonsBox button { margin-bottom: 15px }
+
+    #bottomButtonsBox {
+      float: none; clear: both; width: 460px; height: 35px; margin-top: 50px
+    }
+
+    #bottomButtonsBox button { margin-left: 10px }
+
+    #locationLabel, #locationDropDown, #photoWindowOkButton, #photoWindowCancelButton { float: left }
+    #locationLabel { line-height: 23px }
+    #locationDropDown { margin-left: 10px }
+
+    #uploadFile { visibility: hidden }
+
+  </style>
+
+  <script type="text/javascript" language="javascript">
+
+    var launchCaptureButton;
+    var photo;
+    var photoDialog;
+    var locationsAdapter;
+    var savePhotoButton;
+    var cancelPhotoButton;
+    var startWebcamButton;
+    var freezeWebcamButton;
+    var uploadJPEGButton;
+    var cropImageButton;
+    var locationCbo;
+    var imageBox;
+    var image;
+    var uploadFile;
+    var cropping;
+
+    Webcam.set({
+      width: 320, height: 240, image_format: 'jpeg', jpeg_quality: 100, dest_height: 480, dest_width: 640
+    });
+
+    function setImage(widget, height, width) {
+      if (!width) width = 320;
+      if (!height) height = 240;
+      widget.html('<img src="' + photo + '" width="' + width + '" height="' + height +'" id="image" />');
+      image = $("#image");
+    }
+
+    function resetCaptureWindow() {
+      image.croppie('destroy');
+      image = null;
+      imageBox.html('');
+      Webcam.reset();
+      cropping = false;
+      savePhotoButton.jqxButton({ disabled: true });
+    }
+    /*
+    function dump(obj) {
+     var out = '';
+     for (var i in obj) {
+       if (obj.hasOwnProperty(i)) out += i + ": " + obj[i] + "\n";
+     }
+     return out;
+    }
+    */
+
+    $(document).ready(function () {
+
+      launchCaptureButton = $("#btnLaunchCapture").jqxButton({width: 150, height: 25, theme: 'fresh2'});
+      savePhotoButton = $("#photoWindowOkButton").jqxButton({ width: 75, height: 25, theme: 'fresh2', disabled: true });
+      cancelPhotoButton = $("#photoWindowCancelButton").jqxButton({ width: 75, height: 25, theme: 'fresh2' });
+      startWebcamButton = $("#photoWindowWebcamButton").jqxButton({ width: 130, height: 25, theme: 'fresh2' });
+      freezeWebcamButton = $("#photoWindowSnapButton").jqxButton({ width: 130, height: 25, theme: 'fresh2' });
+      uploadJPEGButton = $("#photoWindowUploadButton").jqxButton({ width: 130, height: 25, theme: 'fresh2' });
+      cropImageButton = $("#photoWindowCropButton").jqxButton({ width: 130, height: 25, theme: 'fresh2' });
+      imageBox = $("#imageBox");
+      uploadFile = $("#uploadFile");
+      cropping = false;
+
+      photoDialog = $("#photoWindow").jqxWindow({
+        width: 485, height: 370, theme: 'controls',
+        autoOpen: false, isModal: true, showCloseButton: false,
+        okButton: savePhotoButton, cancelButton: cancelPhotoButton
+      });
+
+      launchCaptureButton.on('click', function () {
+        photoDialog.jqxWindow('open');
+      });
+
+      locationsAdapter = new $.jqx.dataAdapter({
+        dataType: 'json',
+        dataFields: [{name: 'locationCode'}, {name: 'location'}],
+        url: 'locations.json'
+      });
+
+      locationCbo = $("#locationDropDown").jqxComboBox({
+        width: 188, height: 23, theme: 'fresh2',
+        source: locationsAdapter, displayMember: 'location', valueMember: 'locationCode'
+      });
+
+      locationCbo.on('change', function() {
+        // TODO set a variable to the selected location
+      });
+
+      startWebcamButton.on('click', function() {
+        Webcam.attach('#imageBox');
+        cropping = false;
+      });
+
+      freezeWebcamButton.on('click', function() {
+        Webcam.snap(function(data_uri) {
+          photo = data_uri;
+          Webcam.reset();
+          setImage(imageBox);
+          savePhotoButton.jqxButton({ disabled: false });
+        });
+      });
+
+      cropImageButton.on('click', function() {
+        image.croppie({
+          viewport: {width: 180, height: 225}
+        });
+        cropping = true;
+      });
+
+      uploadJPEGButton.on('click', function() {
+        uploadFile.click();
+      });
+
+      uploadFile.on('change', function(event) {
+        if (event.target.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            photo = e.target.result;
+            setImage(imageBox);
+            cropping = false;
+            savePhotoButton.jqxButton({ disabled: false });
+          };
+          reader.readAsDataURL(event.target.files[0]);
+        }
+      });
+
+      Webcam.on('error', function(err) {
+        var message = err.message;
+        if (message.indexOf("No camera") >= 0) {
+          alert("The webcam is either malfunctioning or missing.");
+        }
+      });
+
+      cancelPhotoButton.on('click', function() {
+        resetCaptureWindow();
+      });
+
+      savePhotoButton.on('click', function() {
+        if (cropping) {
+          image.croppie('result', {
+            type: 'canvas',
+            size: 'viewport'
+          }).then(function(crop) {
+            photo = crop;
+            setImage(imageBox, 225, 180);
+          }).then(function() {
+            Webcam.upload(photo, 'upload.php?offenderNum=123456', function(code, text) {
+              if (code === 200) {
+                resetCaptureWindow();
+              } else {
+                alert(code + " " + text);
+              }
+            });
+          });
+        } else {
+          Webcam.upload(photo, 'upload.php?offenderNum=123456', function (code, text) {
+            if (code === 200) {
+              resetCaptureWindow();
+            } else {
+              alert(code + " " + text);
+            }
+          });
+        }
+      });
+
+    });
+
+  </script>
+
+</head>
+<body>
+<button id="btnLaunchCapture"> Launch Capture!</button>
+<div id="photoWindow">
+  <div id="photoWindowHeader">
+    <img title="Person icon" alt="Person icon" src="images/person.png" id="photoWindowIcon">
+    <div id="photoWindowTitle"> Photo capture or upload</div>
+  </div>
+  <div id="photoWindowBody">
+
+    <div id="imageBox"></div>
+    <div id="sideButtonsBox">
+      <button id="photoWindowWebcamButton"> Start Webcam </button>
+      <button id="photoWindowSnapButton"> Freeze Webcam </button>
+      <button id="photoWindowUploadButton"> Upload JPEG </button>
+      <button id="photoWindowCropButton"> Crop Image </button>
+      <input type="file" id="uploadFile" accept="image/*">
+    </div>
+
+    <div style="height: 0; clear: both; float: none"></div>
+
+    <div id="bottomButtonsBox">
+      <div id="chooseLocation">
+        <div id="locationLabel"> Photo Location: </div>
+        <div id="locationDropDown"></div>
+      </div>
+      <button id="photoWindowOkButton"> Save </button>
+      <button id="photoWindowCancelButton"> Cancel </button>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
