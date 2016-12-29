@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <link type="text/css" href="css/main.css" rel="stylesheet">
+  <link type="text/css" href="lib/jqwidgets/styles/jqx.base.css" rel="stylesheet">
+  <link type="text/css" href="lib/jqwidgets/styles/jqx.metro.css" rel="stylesheet">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxcore.js"></script>
+  <script type="text/javascript" src="lib/jqwidgets/jqxtabs.js"></script>
+
+  <script type="text/javascript" language="javascript">
+
+    var myVar= $("#location");
+
+    $.ajax("getLocDesc.php", {
+      cache: false,
+      success: function(data) {
+        myVar.html(data);
+      },
+      error: function(jqXHR) {
+        myVar.html(jqXHR.responseText);
+      }
+    });
+
+
+    $(document).ready( function() {
+
+      myVar.html("Testing testing testing");
+      var tabs = $("#tabs").jqxTabs({ width: 898, height: 450, theme: 'metro' });
+    });
+
+  </script>
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="headBand">
+      <img alt="Logo" title="Logo" src="images/doc_seal_small_noBack%20copy.png">
+      <div id="headBandTitle"><h1>Testing</h1></div>
+    </div>
+    <div id="middleBand">
+      <div id="location"></div>
+      <div id="tabs">
+        <ul>
+          <li>Tab 1</li>
+          <li>Tab 2</li>
+          <li>Tab 3</li>
+        </ul>
+        <div>
+          <p>Content 1</p>
+        </div>
+        <div>Content 2</div>
+        <div>Content 3</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
