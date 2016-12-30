@@ -26,3 +26,4 @@ function blankIfNull(val) {
 function dfWithNull(dbDate, mask, utc) {
   return (null !== dbDate) ? dateFormat(Date.parse(dbDate.date), mask, utc) : '';
 }
+

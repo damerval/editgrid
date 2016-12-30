@@ -1,0 +1,17 @@
+#traceOutput { display: none }
+
+#cawContents { width: 335px; margin: 5px }
+
+.cawFormRow { min-height: 25px; width: 100%; margin-bottom: 10px }
+.cawLabel { height: 25px; width: 75px; float: left; line-height: 25px }
+.cawField { height: 25px; width: 250px; float: left }
+
+.buttonBar { height: 30px }
+#cawSave { float: left }
+#cawCancel { float: right; margin-right: 10px }
+#cawSave, #cawCancel { margin-top: 10px }
+.buttonBar:after { content: ""; display: table; clear: both; height: 0 }
+
+
+
+.cawFormRow:after { content: ""; display: table; clear: both; height: 0 }
