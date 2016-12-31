@@ -10,6 +10,10 @@ var cawColorSelect;
 var cawStartDate;
 var cawEndDate;
 var offenderDataAdapter;
+var colorAssignmentAddButton;
+var colorAssignmentEditButton;
+var colorAssignmentDeleteButton;
+var colorAssignmentButtonBar;
 
 $(document).ready(function() {
 
@@ -19,10 +23,15 @@ $(document).ready(function() {
   cawColorSelect = $("#cawColor").jqxDropDownList({ source: htmlColors, width: 250, height: 25, theme: 'metro' });
   cawStartDate = $("#cawStart").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
   cawEndDate = $("#cawEnd").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
+  colorAssignmentAddButton = $("#cabAdd").jqxButton({ width: 75, height: 25, theme: 'metro' });
+  colorAssignmentEditButton = $("#cabEdit").jqxButton({ width: 75, height: 25, theme: 'metro '});
+  colorAssignmentDeleteButton = $("#cabDelete").jqxButton({ width: 75, height: 25, theme: 'metro' });
+  colorAssignmentButtonBar = $("#colorAssignmentButtons").jqxPanel({ width: 500, height: 25, theme: 'metro' });
+
 
   colorAssignmentWindow = $("#colorAssignmentsWindow").jqxWindow({
     width: 345, theme: 'metro', okButton: cawSaveButton, cancelButton: cawCancelButton,
-    isModal: true, autoOpen: true
+    isModal: true, autoOpen: false
   });
 
   offenderDataAdapter = new $.jqx.dataAdapter({
@@ -42,6 +51,20 @@ $(document).ready(function() {
     id: 'offenderId'
   });
 
-
+  $("#testTable").jqxDataTable({
+    source: offenderDataAdapter,
+    width: 850, height: 329, theme: 'metro', pageable: true, pagerButtonsCount: 10,
+    columns: [
+      { text: 'Offender ID', dataField: 'offenderId', width: 75 },
+      { text: 'Full Name', dataField: 'fullName' },
+      { text: 'Hair color', dataField: 'hairColorCode', width: 75 },
+      { text: 'Eye color', dataField: 'eyeColorCode', width: 75 },
+      { text: 'Height', dataField: 'height', width: 75 },
+      { text: 'Sex', dataField: 'sex', width: 40 },
+      { text: 'Race', dataField: 'raceCode', width: 40 },
+      { text: 'Religion', dataField: 'religionCode', width: 75 },
+      { text: 'Location', dataField: 'location', width: 75 }
+    ]
+  });
 
 });

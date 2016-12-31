@@ -3,6 +3,8 @@
 #cawContents { width: 335px; margin: 5px }
 
 .cawFormRow { min-height: 25px; width: 100%; margin-bottom: 10px }
+.cawFormRow:after { content: ""; display: table; clear: both; height: 0 }
+
 .cawLabel { height: 25px; width: 75px; float: left; line-height: 25px }
 .cawField { height: 25px; width: 250px; float: left }
 
@@ -12,6 +14,8 @@
 #cawSave, #cawCancel { margin-top: 10px }
 .buttonBar:after { content: ""; display: table; clear: both; height: 0 }
 
+#colorAssignmentButtons { margin: 10px; padding: 5px }
 
-
-.cawFormRow:after { content: ""; display: table; clear: both; height: 0 }
+#cawTitle img { float: left; clear: left }
+#cawTitle span { line-height: 18px; display: block; float: left; clear: right; margin-left: 15px; font-weight: bold; font-style: italic }
+#cawTitle:after { content: ""; display: table; clear: both; height: 0 }
