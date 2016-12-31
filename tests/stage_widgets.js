@@ -14,12 +14,15 @@ var colorAssignmentAddButton;
 var colorAssignmentEditButton;
 var colorAssignmentDeleteButton;
 var colorAssignmentButtonBar;
+var offenderOptions;
 
 $(document).ready(function() {
 
   cawSaveButton = $("#cawSave").jqxButton({ width: 75, height: 21, theme: 'metro' });
   cawCancelButton = $("#cawCancel").jqxButton({ width: 75, height: 21, theme: 'metro' });
-  cawOffenderSelect = $("#cawOffender").jqxDropDownList({ width: 250, height: 25, theme: 'metro' });
+  cawOffenderSelect = $("#cawOffender").jqxDropDownList({ width: 250, height: 25, theme: 'metro',
+    valueMember: 'uid', displayMember: 'choiceString'
+  });
   cawColorSelect = $("#cawColor").jqxDropDownList({ source: htmlColors, width: 250, height: 25, theme: 'metro' });
   cawStartDate = $("#cawStart").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
   cawEndDate = $("#cawEnd").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
@@ -49,6 +52,25 @@ $(document).ready(function() {
       { name: 'location', type: 'int' }
     ],
     id: 'offenderId'
+  }, {
+    beforeLoadComplete: function(records) {
+      var data = [];
+      for (var i = 0; i<records.length; i++) {
+        var choice = { uid: records[i]['offenderId'], choiceString: records[i]['offenderId'] + " - " + records[i]["fullName"] };
+        data.push(choice);
+      }
+      offenderOptions = new $.jqx.dataAdapter({
+        dataType: 'array',
+        localData: data,
+        dataFields: [
+          { name: 'uid', type: 'int' },
+          { name: 'choiceString', type: 'string' }
+        ]
+      },{
+        autoBind: true
+      });
+      cawOffenderSelect.jqxDropDownList({ source: offenderOptions });
+    }
   });
 
   $("#testTable").jqxDataTable({
