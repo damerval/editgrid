@@ -8,4 +8,8 @@ $(document).ready(function() {
     colorAssignmentWindow.jqxWindow('open');
   });
 
+  cawSaveButton.on('click', function() {
+    alert(cawOffenderSelect.val());
+  });
+
 });

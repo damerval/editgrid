@@ -18,10 +18,10 @@ var offenderOptions;
 
 $(document).ready(function() {
 
-  cawSaveButton = $("#cawSave").jqxButton({ width: 75, height: 21, theme: 'metro' });
-  cawCancelButton = $("#cawCancel").jqxButton({ width: 75, height: 21, theme: 'metro' });
+  cawSaveButton = $("#cawSave").jqxButton({ width: 75, height: 23, theme: 'metro' });
+  cawCancelButton = $("#cawCancel").jqxButton({ width: 75, height: 23, theme: 'metro' });
   cawOffenderSelect = $("#cawOffender").jqxDropDownList({ width: 250, height: 25, theme: 'metro',
-    valueMember: 'uid', displayMember: 'choiceString'
+    valueMember: 'offenderId', displayMember: 'choiceString'
   });
   cawColorSelect = $("#cawColor").jqxDropDownList({ source: htmlColors, width: 250, height: 25, theme: 'metro' });
   cawStartDate = $("#cawStart").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
@@ -29,11 +29,11 @@ $(document).ready(function() {
   colorAssignmentAddButton = $("#cabAdd").jqxButton({ width: 75, height: 25, theme: 'metro' });
   colorAssignmentEditButton = $("#cabEdit").jqxButton({ width: 75, height: 25, theme: 'metro '});
   colorAssignmentDeleteButton = $("#cabDelete").jqxButton({ width: 75, height: 25, theme: 'metro' });
-  colorAssignmentButtonBar = $("#colorAssignmentButtons").jqxPanel({ width: 500, height: 25, theme: 'metro' });
+  colorAssignmentButtonBar = $("#colorAssignmentButtons").jqxPanel({ width: 500, height: 27, theme: 'metro' });
 
 
   colorAssignmentWindow = $("#colorAssignmentsWindow").jqxWindow({
-    width: 345, theme: 'metro', okButton: cawSaveButton, cancelButton: cawCancelButton,
+    width: 350, height: 238, theme: 'metro', okButton: cawSaveButton, cancelButton: cawCancelButton,
     isModal: true, autoOpen: false
   });
 
@@ -41,7 +41,7 @@ $(document).ready(function() {
     url: '/require/offenderList.php',
     dataType: 'json',
     dataFields: [
-      { name: 'offenderId', type: 'int' },
+      { name: 'offenderId', type: 'string' },
       { name: 'fullName', type: 'string' },
       { name: 'hairColorCode', type: 'string' },
       { name: 'eyeColorCode', type: 'string' },
@@ -56,14 +56,14 @@ $(document).ready(function() {
     beforeLoadComplete: function(records) {
       var data = [];
       for (var i = 0; i<records.length; i++) {
-        var choice = { uid: records[i]['offenderId'], choiceString: records[i]['offenderId'] + " - " + records[i]["fullName"] };
+        var choice = { offenderId: records[i]['offenderId'], choiceString: records[i]['offenderId'] + " - " + records[i]["fullName"] };
         data.push(choice);
       }
       offenderOptions = new $.jqx.dataAdapter({
         dataType: 'array',
         localData: data,
         dataFields: [
-          { name: 'uid', type: 'int' },
+          { name: 'offenderId', type: 'string' },
           { name: 'choiceString', type: 'string' }
         ]
       },{
