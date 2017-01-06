@@ -54,19 +54,17 @@ function getValue($sql, $params, $field) {
   return $result;
 }
 
-function runInsertSQL($sql, $params, $connection, $key) {
-  $return = 0;
-  error_log('Entering insertSQL');
+function runInsertSQL($sql, $params, $connection) {
+  $return = null;
 
   if (!$sql == "") {
     $conn = isset($connection) ? $connection : getConnection();
     if ($conn) {
+      $sql .=  ( substr(trim($sql), -1) == ";" ? "" : ";" ) . " SELECT SCOPE_IDENTITY() as insertId";
       $stmt = sqlsrv_query($conn, $sql, $params);
       if ($stmt) {
-        if (sqlsrv_next_result($stmt)) {
-          $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-          $return = $row[$key];
-        }
+        sqlsrv_next_result($stmt);
+        $return = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)["insertId"];
       } else {
         error_log(print_r(sqlsrv_errors(), true));
         return DB_ERROR_STMT_FAIL;

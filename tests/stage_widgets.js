@@ -15,6 +15,7 @@ var colorAssignmentEditButton;
 var colorAssignmentDeleteButton;
 var colorAssignmentButtonBar;
 var offenderOptions;
+var testButton;
 
 $(document).ready(function() {
 
@@ -24,13 +25,16 @@ $(document).ready(function() {
     valueMember: 'offenderId', displayMember: 'choiceString'
   });
   cawColorSelect = $("#cawColor").jqxDropDownList({ source: htmlColors, width: 250, height: 25, theme: 'metro' });
-  cawStartDate = $("#cawStart").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
-  cawEndDate = $("#cawEnd").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro' });
+  cawStartDate = $("#cawStart").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro',
+      formatString: 'MM/dd/yyyy' });
+  cawEndDate = $("#cawEnd").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro', value: null,
+      formatString: 'MM/dd/yyyy' });
   colorAssignmentAddButton = $("#cabAdd").jqxButton({ width: 75, height: 25, theme: 'metro' });
   colorAssignmentEditButton = $("#cabEdit").jqxButton({ width: 75, height: 25, theme: 'metro '});
   colorAssignmentDeleteButton = $("#cabDelete").jqxButton({ width: 75, height: 25, theme: 'metro' });
   colorAssignmentButtonBar = $("#colorAssignmentButtons").jqxPanel({ width: 500, height: 27, theme: 'metro' });
 
+  testButton = $("#testButton").jqxButton({ width: 75, height: 23, theme: 'metro' });
 
   colorAssignmentWindow = $("#colorAssignmentsWindow").jqxWindow({
     width: 350, height: 238, theme: 'metro', okButton: cawSaveButton, cancelButton: cawCancelButton,
@@ -56,7 +60,9 @@ $(document).ready(function() {
     beforeLoadComplete: function(records) {
       var data = [];
       for (var i = 0; i<records.length; i++) {
-        var choice = { offenderId: records[i]['offenderId'], choiceString: records[i]['offenderId'] + " - " + records[i]["fullName"] };
+        var choice = {
+            offenderId: records[i]['offenderId'],
+            choiceString: records[i]['offenderId'] + " - " + records[i]["fullName"] };
         data.push(choice);
       }
       offenderOptions = new $.jqx.dataAdapter({
