@@ -79,7 +79,7 @@ $(document).ready(function() {
 
   testButton.on('click', function () {
     $.post("../require/saveColorAssignment.php?XDEBUG_SESSION_START=xdebug",
-      { offenderId: 416715, color: 'Black', startDate: '2016-12-15', endDate: '2017-01-31' },
+      { offenderId: 416715, color: 'Black', startDate: '2016-12-15', endDate: null, ca_id: null },
       function (data) {
         alert(data);
       }  

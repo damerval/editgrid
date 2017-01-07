@@ -24,5 +24,5 @@ if (null != $caId) {
   echo runInsertSQL("
     INSERT INTO color_assignments (offenderId, color, startDate, endDate)
     VALUES (?, ?, ?, ?);
-    ", $params, null);
+  ", $params, null);
 }
