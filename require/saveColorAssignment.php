@@ -12,10 +12,17 @@ $offenderId = $_POST['offenderId'];
 $color = $_POST['color'];
 $startDate = $_POST['startDate'];
 $endDate = isset($_POST['endDate']) ? $_POST['endDate'] : null;
+$caId = isset($_POST['ca_id']) ? $_POST['ca_id'] : null;
 
 $params = array($offenderId, $color, $startDate, $endDate);
 
-echo runInsertSQL("
-INSERT INTO color_assignments (offenderId, color, startDate, endDate)
-VALUES (?, ?, ?, ?);
-", $params, getConnection());
+if (null != $caId) {
+  echo runUpdateSQL("
+    UPDATE color_assignments SET offenderId = ?, color = ?, startDate = ?, endDate = ?
+  ", $params, null, 'ca_id', $caId);
+} else {
+  echo runInsertSQL("
+    INSERT INTO color_assignments (offenderId, color, startDate, endDate)
+    VALUES (?, ?, ?, ?);
+    ", $params, null);
+}

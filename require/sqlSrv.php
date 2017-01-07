@@ -75,6 +75,23 @@ function runInsertSQL($sql, $params, $connection) {
   return $return;
 }
 
+function runUpdateSQL($sql, $params, $connection, $keyName, $keyValue) {
+
+  if ($sql !== "" && $keyName !== "" && $keyValue !== "") {
+    $conn = isset($connection) ? $connection : getConnection();
+    if ($conn) {
+      $sql .= " WHERE " . $keyName . " = ?";
+      $params[] = $keyValue;
+      $stmt = sqlsrv_query($conn, $sql, $params);
+      if ($stmt) {
+        $result = "SUCCESS";
+      } else $result = DB_ERROR_STMT_FAIL;
+    } else $result = DB_ERROR_NO_CONNECTION;
+  } else $result = DB_ERROR_BAD_CONTRACT;
+
+  return $result;
+}
+
 function runDeleteSQL($table, $keyName, $keyValue, $connection) {
 
   if ($table !== "" && $keyName !== "") {

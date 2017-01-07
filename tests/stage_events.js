@@ -1,6 +1,7 @@
 /**
  * Created by pdamerval on 12/30/2016.
  */
+var editMode;
 
 function checkColorAssignmentsDialog() {
   return cawOffenderSelect.jqxDropDownList('selectedIndex') !== -1
@@ -37,9 +38,15 @@ function loadColorAssignmentsDialog() {
   cawEndDate.jqxDateTimeInput('setDate', rowData['endDate']);
 }
 
+function showLastRow(gridObj) {
+  var metadata = gridObj.jqxGrid('getDataInformation');
+  gridObj.jqxGrid('ensureRowVisible', metadata.rowscount-1);
+}
+
 $(document).ready(function() {
 
   colorAssignmentAddButton.on('click', function() {
+    editMode = 'INSERT';
     clearColorAssignmentDialog();
     openWindow(colorAssignmentWindow);
     disableButton(cawSaveButton);
@@ -58,10 +65,12 @@ $(document).ready(function() {
     $.post("../require/saveColorAssignment.php",
         { offenderId: cawOffenderSelect.val(), color: cawColorSelect.val(),
           startDate: cawStartDate.jqxDateTimeInput('getDate').toString('yyyy-MM-dd'),
-          endDate: !nullEndDate ? cawEndDate.jqxDateTimeInput('getDate').toString('yyyy-MM-dd') : null
+          endDate: !nullEndDate ? cawEndDate.jqxDateTimeInput('getDate').toString('yyyy-MM-dd') : null,
+          ca_id: editMode === "INSERT" ? null : caGrid.jqxGrid('getRowData', caGrid.jqxGrid('getSelectedRowIndex'))['ca_id']
         },
         function () {
           caGrid.jqxGrid('updateBoundData');
+          showLastRow(caGrid);
         }
     ).fail(function (jqXHR) {
       alert(jqXHR.toString());
@@ -97,6 +106,7 @@ $(document).ready(function() {
   });
 
   colorAssignmentEditButton.on('click', function () {
+    editMode = 'UPDATE';
     loadColorAssignmentsDialog();
     openWindow(colorAssignmentWindow);
     disableButton(cawSaveButton);
