@@ -27,6 +27,16 @@ function clearColorAssignmentDialog() {
   cawEndDate.jqxDateTimeInput('setDate', null);
 }
 
+function loadColorAssignmentsDialog() {
+  var rowData = caGrid.jqxGrid('getRowData', caGrid.jqxGrid('getSelectedRowIndex'));
+  cawOffenderSelect.jqxDropDownList('selectItem',
+      cawOffenderSelect.jqxDropDownList('getItemByValue', rowData['offenderId']));
+  cawColorSelect.jqxDropDownList('selectItem',
+      cawColorSelect.jqxDropDownList('getItemByValue', rowData['color']));
+  cawStartDate.jqxDateTimeInput('setDate', rowData['startDate']);
+  cawEndDate.jqxDateTimeInput('setDate', rowData['endDate']);
+}
+
 $(document).ready(function() {
 
   colorAssignmentAddButton.on('click', function() {
@@ -50,8 +60,8 @@ $(document).ready(function() {
           startDate: cawStartDate.jqxDateTimeInput('getDate').toString('yyyy-MM-dd'),
           endDate: !nullEndDate ? cawEndDate.jqxDateTimeInput('getDate').toString('yyyy-MM-dd') : null
         },
-        function (data) {
-          alert(data);
+        function () {
+          caGrid.jqxGrid('updateBoundData');
         }
     ).fail(function (jqXHR) {
       alert(jqXHR.toString());
@@ -67,6 +77,29 @@ $(document).ready(function() {
     ).fail(function (jqXHR) {
       alert(jqXHR);
     });
-  })
+  });
+
+  caGrid.on('rowselect', function () {
+    enableButton(colorAssignmentEditButton);
+    enableButton(colorAssignmentDeleteButton);
+  });
+
+  colorAssignmentDeleteButton.on('click', function () {
+    $.post("../require/deleteRow.php",
+        { tableName: 'color_assignments', keyColumn: 'ca_id',
+          keyValue: caGrid.jqxGrid('getRowData', caGrid.jqxGrid('getSelectedRowIndex'))["ca_id"]
+        },
+        function (data) {
+          if (data !== "SUCCESS") alert(data);
+        }
+    );
+    caGrid.jqxGrid('updateBoundData');
+  });
+
+  colorAssignmentEditButton.on('click', function () {
+    loadColorAssignmentsDialog();
+    openWindow(colorAssignmentWindow);
+    disableButton(cawSaveButton);
+  });
 
 });

@@ -14,7 +14,7 @@
 #cawSave, #cawCancel { margin-top: 10px }
 .buttonBar:after { content: ""; display: table; clear: both; height: 0 }
 
-#colorAssignmentButtons { margin: 10px; padding: 5px }
+#colorAssignmentButtons { margin: 10px 0; padding: 5px }
 
 #cawTitle img { float: left; clear: left }
 #cawTitle span {

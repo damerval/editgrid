@@ -16,6 +16,14 @@ var colorAssignmentDeleteButton;
 var colorAssignmentButtonBar;
 var offenderOptions;
 var testButton;
+var caDataAdapter;
+var caGrid;
+
+var colorRenderer = function (row, datafield, value) {
+  return '<div class="foo" ' +
+      'style="height: 28px; text-align: center; line-height: 26px; background-color: ' +
+      value + '"> </div>';
+};
 
 $(document).ready(function() {
 
@@ -30,8 +38,8 @@ $(document).ready(function() {
   cawEndDate = $("#cawEnd").jqxDateTimeInput({ width: 250, height: 25, theme: 'metro', value: null,
       formatString: 'MM/dd/yyyy' });
   colorAssignmentAddButton = $("#cabAdd").jqxButton({ width: 75, height: 25, theme: 'metro' });
-  colorAssignmentEditButton = $("#cabEdit").jqxButton({ width: 75, height: 25, theme: 'metro '});
-  colorAssignmentDeleteButton = $("#cabDelete").jqxButton({ width: 75, height: 25, theme: 'metro' });
+  colorAssignmentEditButton = $("#cabEdit").jqxButton({ width: 75, height: 25, theme: 'metro', disabled: true });
+  colorAssignmentDeleteButton = $("#cabDelete").jqxButton({ width: 75, height: 25, theme: 'metro', disabled: true });
   colorAssignmentButtonBar = $("#colorAssignmentButtons").jqxPanel({ width: 500, height: 27, theme: 'metro' });
 
   testButton = $("#testButton").jqxButton({ width: 75, height: 23, theme: 'metro' });
@@ -45,7 +53,7 @@ $(document).ready(function() {
     url: '/require/offenderList.php',
     dataType: 'json',
     dataFields: [
-      { name: 'offenderId', type: 'string' },
+      { name: 'offenderId', type: 'int' },
       { name: 'fullName', type: 'string' },
       { name: 'hairColorCode', type: 'string' },
       { name: 'eyeColorCode', type: 'string' },
@@ -92,6 +100,32 @@ $(document).ready(function() {
       { text: 'Race', dataField: 'raceCode', width: 40 },
       { text: 'Religion', dataField: 'religionCode', width: 75 },
       { text: 'Location', dataField: 'location', width: 75 }
+    ]
+  });
+
+  caDataAdapter = new $.jqx.dataAdapter({
+    url: '../require/colorAssignments.php',
+    dataType: 'json',
+    dataFields: [
+      { name: 'ca_id', type: 'int' },
+      { name: 'offenderId', type: 'int' },
+      { name: 'offender', map: 'ofn', type: 'string' },
+      { name: 'color', type: 'string' },
+      { name: 'startDate', map: 'startDate>date', type: 'date' },
+      { name: 'endDate', map: 'endDate>date', type: 'date' }
+    ],
+    id: 'ca_id',
+    pageSize: 10
+  });
+
+  caGrid = $("#colorAssignmentsGrid").jqxGrid({
+    width: 510, height: 346, theme: 'metro', sortable: true, pageable: true, pagerButtonsCount: 10,
+    source: caDataAdapter, pagerMode: 'simple', rowsHeight: 28,
+    columns: [
+      { text: 'Offender ID', dataField: 'offenderId', displayField: 'offender', width: 250 },
+      { text: 'Color', dataField: 'color', width: 100, cellsRenderer: colorRenderer },
+      { text: 'Start Date', dataField: 'startDate', cellsFormat: 'MM/dd/yyyy', width: 80, cellsAlign: 'center' },
+      { text: 'End Date', dataField: 'endDate', cellsFormat: 'MM/dd/yyyy', width: 80, cellsAlign: 'center' }
     ]
   });
 

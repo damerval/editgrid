@@ -74,3 +74,23 @@ function runInsertSQL($sql, $params, $connection) {
 
   return $return;
 }
+
+function runDeleteSQL($table, $keyName, $keyValue, $connection) {
+
+  if ($table !== "" && $keyName !== "") {
+    $conn = isset($connection) ? $connection : getConnection();
+    if ($conn) {
+      $sql = "DELETE FROM " . $table . " WHERE " . $keyName . " = ?";
+      $params[] = $keyValue;
+      $stmt = sqlsrv_query($conn, $sql, $params);
+      if ($stmt) {
+        $return = "SUCCESS";
+      } else {
+        error_log(print_r(sqlsrv_errors(), true));
+        $return = DB_ERROR_STMT_FAIL;
+      }
+    } else $return = DB_ERROR_NO_CONNECTION;
+  } else $return = DB_ERROR_BAD_CONTRACT;
+
+  return $return;
+}
